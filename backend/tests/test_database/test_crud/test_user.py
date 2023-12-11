@@ -1,7 +1,7 @@
 import pytest 
 
 from sqlmodel.ext.asyncio.session import AsyncSession
-from sqlalchemy.exc import NoResultFound
+from sqlalchemy.exc import NoResultFound, IntegrityError
 
 from src.database.models import User
 from src.database.crud.user import(
@@ -18,6 +18,14 @@ async def test_make_user(database_session: AsyncSession):
     new_user: User = await make_user(database_session, "Joske", "PW1")
     assert new_user.name == "Joske"
     assert new_user.password == "PW1"
+    assert new_user.groups == []
+
+
+async def test_make_user_dublicate(database_session: AsyncSession):
+    """Test to make and get a dublicate user"""
+    await make_user(database_session, "Joske", "PW1")
+    with pytest.raises(IntegrityError):
+        await make_user(database_session, "Joske", "pw2")
 
 
 async def test_get_user(database_session: AsyncSession):

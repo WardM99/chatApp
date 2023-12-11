@@ -87,9 +87,9 @@ async def logic_change_user(database: AsyncSession,
     """Logic to change the user"""
     if user.user_id != user_id:
         raise WrongUserException
-    if new_name != None:
+    if new_name:
         await edit_user_name(database, user, new_name)
-    if new_password != None:
+    if new_password:
         await edit_user_password(database, user, new_password)
 
 
