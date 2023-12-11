@@ -2,22 +2,20 @@ from typing import Union
 
 from fastapi import FastAPI
 from sqlmodel import SQLModel
+from src.app.exceptions.handler import install_handlers
+from src.app.routers import user_router
 from src.database.database import engine
+
 
 app = FastAPI()
 
+install_handlers(app)
 
-@app.get("/")
-async def read_root():
-    return {"Hello": "World"}
-
-
-@app.get("/items/{item_id}")
-async def read_item(item_id: int, q: Union[str, None] = None):
-    return {"item_id": item_id, "q": q}
+app.include_router(user_router)
 
 
 @app.on_event("startup")
 async def startup():
+    """creating the database"""
     async with engine.begin() as conn:
         await conn.run_sync(SQLModel.metadata.create_all)

@@ -14,7 +14,7 @@ async def get_user_by_id(database: AsyncSession, user_id: Optional[int]) -> User
 
 async def make_user(database: AsyncSession, name: str, password: str) -> User:
     """Make a new user"""
-    user: User = User(name=name, password=password)
+    user: User = User(name=name, password=password, groups=[])
     database.add(user)
     await database.commit()
     return user
@@ -40,3 +40,10 @@ async def delete_user(database: AsyncSession, user: User) -> None:
     """Delete a user"""
     await database.delete(user)
     await database.commit()
+
+
+async def get_user_by_name(database: AsyncSession, name: str) -> User:
+    """Get the user by name"""
+    statement = select(User).where(User.name == name)
+    results = await database.exec(statement)
+    return results.one()

@@ -9,10 +9,10 @@ class UserGroupLink(SQLModel, table=True):
 
 class User(SQLModel, table=True):
     user_id: Optional[int] = Field(default=None, primary_key=True)
-    name: str = Field(nullable=False, unique=True)
+    name: str = Field(nullable=False, unique=True, index=True)
     password: str = Field(nullable=False)
 
-    groups: List["Group"] = Relationship(back_populates="users", link_model=UserGroupLink)
+    groups: List["Group"] = Relationship(back_populates="users", link_model=UserGroupLink, sa_relationship_kwargs={"lazy": "selectin"})
 
 
 class Group(SQLModel, table=True):
@@ -20,7 +20,7 @@ class Group(SQLModel, table=True):
     name: str = Field(nullable=False, unique=True)
     owner_id: int = Field(foreign_key="user.user_id", index=True)
 
-    users: List[User] = Relationship(back_populates="groups", link_model=UserGroupLink)
+    users: List[User] = Relationship(back_populates="groups", link_model=UserGroupLink, sa_relationship_kwargs={"lazy": "selectin"})
 
 
 class Message(SQLModel, table=True):

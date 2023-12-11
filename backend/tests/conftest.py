@@ -1,17 +1,15 @@
 from typing import AsyncGenerator
 
 import pytest
-from sqlalchemy.ext.asyncio import create_async_engine
 
 from sqlmodel import SQLModel
 from sqlmodel.ext.asyncio.session import AsyncSession
-from sqlmodel.pool import StaticPool
 
 from src.database.database import engine
 
 import src.database.models
 
-@pytest.fixture(scope="session")  
+@pytest.fixture(scope="session")
 async def tables():
     async with engine.begin() as conn:
         await conn.run_sync(SQLModel.metadata.create_all)
