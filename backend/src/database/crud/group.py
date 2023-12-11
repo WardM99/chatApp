@@ -49,3 +49,11 @@ async def add_user(database: AsyncSession, group: Group, user: User) -> Group:
     database.add(group)
     await database.commit()
     return group
+
+
+async def remove_user(database: AsyncSession, group: Group, user: User) -> Group:
+    """Remove user from a group"""
+    group.users.remove(user)
+    database.add(group)
+    await database.commit()
+    return group

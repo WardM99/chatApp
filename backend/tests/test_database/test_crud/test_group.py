@@ -10,7 +10,8 @@ from src.database.crud.group import(
     edit_group_name,
     transfer_owner,
     delete_group,
-    add_user
+    add_user,
+    remove_user
 )
 from src.database.crud.user import make_user
 
@@ -62,4 +63,15 @@ async def test_add_user(database_session: AsyncSession):
     assert len(group.users) == 2
     assert group.users[1] == user2
 
+
+async def test_remove_user(database_session: AsyncSession):
+    owner: User = await make_user(database_session, "Owner", "pw1")
+    user1: User = await make_user(database_session, "User1", "pw1")
+    user2: User = await make_user(database_session, "User2", "pw1")
+    new_group: Group = await make_group(database_session, owner, "Group1")
+    await add_user(database_session, new_group, user1)
+    group: Group = await add_user(database_session, new_group, user2)
+    assert len(group.users) == 3
+    group = await remove_user(database_session, group, user2)
+    assert len(group.users) == 2
     
