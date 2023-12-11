@@ -9,7 +9,8 @@ from src.database.crud.group import(
     make_group,
     edit_group_name,
     transfer_owner,
-    delete_group
+    delete_group,
+    add_user
 )
 from src.database.crud.user import make_user
 
@@ -19,6 +20,8 @@ async def test_make_group(database_session: AsyncSession):
     new_group: Group = await make_group(database_session, owner, "Group1")
     assert new_group.owner_id == owner.user_id
     assert new_group.name == "Group1"
+    assert len(new_group.users) == 1
+    assert new_group.users[0] == owner
 
 
 async def test_get_group_by_id(database_session: AsyncSession):
@@ -49,3 +52,14 @@ async def test_delete_group(database_session: AsyncSession):
     await delete_group(database_session, new_group)
     with pytest.raises(NoResultFound):
         await get_group_by_id(database_session, new_group.group_id)
+
+
+async def test_add_user(database_session: AsyncSession):
+    owner: User = await make_user(database_session, "Owner", "pw1")
+    user2: User = await make_user(database_session, "User2", "pw1")
+    new_group: Group = await make_group(database_session, owner, "Group1")
+    group: Group = await add_user(database_session, new_group, user2)
+    assert len(group.users) == 2
+    assert group.users[1] == user2
+
+    

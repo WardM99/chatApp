@@ -1,8 +1,6 @@
-import pytest 
 from typing import List
 
 from sqlmodel.ext.asyncio.session import AsyncSession
-from sqlalchemy.exc import NoResultFound
 
 from src.database.crud.message import(
     get_messages_by_group,
@@ -33,7 +31,7 @@ async def test_get_messages_by_user_in_group(database_session: AsyncSession):
     message2: Message = await make_message(database_session, user1, group1, "Second")
     message3: Message = await make_message(database_session, user2, group1, "3th")
     message4: Message = await make_message(database_session, user1, group2, "4th")
-    
+
     messages: List[Message] = await get_messages_by_user_in_group(database_session, user1, group1)
     assert len(messages) == 2
     assert message1 in messages
@@ -51,7 +49,7 @@ async def test_get_messages_by_group(database_session: AsyncSession):
     message2: Message = await make_message(database_session, user1, group1, "Second")
     message3: Message = await make_message(database_session, user2, group1, "3th")
     message4: Message = await make_message(database_session, user1, group2, "4th")
-    
+
     messages: List[Message] = await get_messages_by_group(database_session, group1)
     assert len(messages) == 3
     assert message1 in messages
@@ -78,4 +76,3 @@ async def test_delete_message(database_session: AsyncSession):
     await delete_message(database_session, message1)
     messages = await get_messages_by_group(database_session, group1)
     assert len(messages) == 1
-

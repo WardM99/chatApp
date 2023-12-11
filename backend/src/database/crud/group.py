@@ -15,6 +15,7 @@ async def get_group_by_id(database: AsyncSession, group_id: Optional[int]) -> Gr
 async def make_group(database: AsyncSession, owner: User, name: str) -> Group:
     """Make a group"""
     group: Group = Group(name=name, owner_id=owner.user_id)
+    group.users.append(owner)
     database.add(group)
     await database.commit()
     return group
@@ -40,3 +41,11 @@ async def delete_group(database: AsyncSession, group: Group) -> None:
     """Delete the group"""
     await database.delete(group)
     await database.commit()
+
+
+async def add_user(database: AsyncSession, group: Group, user: User) -> Group:
+    """Add user to a group"""
+    group.users.append(user)
+    database.add(group)
+    await database.commit()
+    return group
