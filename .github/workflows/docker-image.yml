@@ -6,12 +6,13 @@ on:
   pull_request:
     branches: [ "master" ]
 
+defaults:
+  run:
+    working-directory: backend
+
 jobs:
-
   build:
-
     runs-on: ubuntu-latest
-
     steps:
     - uses: actions/checkout@v3
     - name: Build the Docker image
