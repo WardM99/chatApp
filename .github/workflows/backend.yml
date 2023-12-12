@@ -34,10 +34,7 @@ jobs:
     - if: steps.cache.outputs.cache-hit != 'true'
       run: pip install -U pip poetry
 
-    - if: steps.cache.outputs.cache-hit != 'true'
-      run: |
-        python -m poetry export --dev --format requirements.txt --output requirements.txt --without-hashes
-        pip install -r requirements.txt
+      run: pip install -r requirements.txt
 
   Pylint:
     needs: [Dependencies]
