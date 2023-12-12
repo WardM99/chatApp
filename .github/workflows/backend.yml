@@ -15,16 +15,16 @@ defaults:
 jobs:
   Dependencies:
     runs-on: ubuntu-latest
-    container: python:3.10.2-slim-bullseye
+    container: python:3.11.7-slim-bullseye
     steps:
     - uses: actions/checkout@v4
     - uses: actions/cache@v3
       id: cache
       with:
-        path: /usr/local/lib/python3.10/site-packages
-        key: venv-${{ runner.os }}-bullseye-3.10.2-v2-${{ hashFiles('**/poetry.lock') }}
+        path: /usr/local/lib/python3.11/site-packages
+        key: venv-${{ runner.os }}-bullseye-3.11.7-v2-${{ hashFiles('**/poetry.lock') }}
         restore-keys: |
-          venv-${{ runner.os }}-bullseye-3.10.2-v2
+          venv-${{ runner.os }}-bullseye-3.11.7-v2
     - if: steps.cache.outputs.cache-hit != 'true'
       run: apt update
 
@@ -37,26 +37,26 @@ jobs:
   Pylint:
     needs: [Dependencies]
     runs-on: ubuntu-latest
-    container: python:latest
+    container: python:3.11.7-slim-bullseye
     steps:
       - uses: actions/checkout@v4
       - uses: actions/cache@v3
         with:
-          path: /usr/local/lib/python3.10/site-packages
-          key: venv-${{ runner.os }}-bullseye-3.10.2-v2-${{ hashFiles('**/poetry.lock') }}
+          path: /usr/local/lib/python3.11/site-packages
+          key: venv-${{ runner.os }}-bullseye-3.11.7-v2-${{ hashFiles('**/poetry.lock') }}
 
       - run: python -m pylint src/*
 
   Type:
     needs: [Dependencies]
     runs-on: ubuntu-latest
-    container: python:latest
+    container: python:3.11.7-slim-bullseye
     steps:
       - uses: actions/checkout@v4
       - uses: actions/cache@v3
         with:
-          path: /usr/local/lib/python3.10/site-packages
-          key: venv-${{ runner.os }}-bullseye-3.10.2-v2-${{ hashFiles('**/poetry.lock') }}
+          path: /usr/local/lib/python3.11/site-packages
+          key: venv-${{ runner.os }}-bullseye-3.11.7-v2-${{ hashFiles('**/poetry.lock') }}
 
       - run: python -m mypy src
 
@@ -64,12 +64,12 @@ jobs:
   Test:
     needs: [Pylint, Type]
     runs-on: ubuntu-latest
-    container: python:latest
+    container: python:3.11.7-slim-bullseye
     steps:
       - uses: actions/checkout@v4
       - uses: actions/cache@v3
         with:
-          path: /usr/local/lib/python3.10/site-packages
-          key: venv-${{ runner.os }}-bullseye-3.10.2-v2-${{ hashFiles('**/poetry.lock') }}
+          path: /usr/local/lib/python3.11/site-packages
+          key: venv-${{ runner.os }}-bullseye-3.11.7-v2-${{ hashFiles('**/poetry.lock') }}
 
       - run: python -m pytest
