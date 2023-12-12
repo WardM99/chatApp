@@ -1,3 +1,4 @@
+"""CRUD operatations of message"""
 from typing import List
 
 from sqlmodel.ext.asyncio.session import AsyncSession
@@ -5,7 +6,11 @@ from sqlmodel import select
 
 from src.database.models import User, Message, Group
 
-async def get_messages_by_user_in_group(database: AsyncSession, user: User, group: Group) -> List[Message]:
+async def get_messages_by_user_in_group(
+        database: AsyncSession,
+        user: User,
+        group: Group
+) -> List[Message]:
     """Get all message by a user"""
     statemet = select(Message)\
         .where(Message.sender_id == user.user_id)\

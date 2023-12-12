@@ -1,3 +1,4 @@
+"""CRUD operations of group"""
 from typing import Optional
 
 from sqlmodel.ext.asyncio.session import AsyncSession

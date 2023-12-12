@@ -1,3 +1,4 @@
+"""CRUD operations of user"""
 from typing import Optional
 
 from sqlmodel.ext.asyncio.session import AsyncSession
