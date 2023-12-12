@@ -1,5 +1,5 @@
-
-from environs import Env 
+"""Settings of the project"""
+from environs import Env
 
 env = Env()
 
