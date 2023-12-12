@@ -8,7 +8,7 @@ from sqlmodel.ext.asyncio.session import AsyncSession
 # pylint: disable=unused-import
 import src.database.models
 
-from settings import DB_NAME
+from src.settings import DB_NAME
 
 engine = create_async_engine(f"sqlite+aiosqlite:///{DB_NAME}.db",
     connect_args={"check_same_thread": False}, echo=True)
