@@ -2,10 +2,10 @@
 from typing import AsyncGenerator
 
 from sqlalchemy.ext.asyncio import create_async_engine
+from sqlalchemy.orm import sessionmaker
 from sqlmodel.ext.asyncio.session import AsyncSession
 
-from sqlalchemy.orm import sessionmaker
-
+# pylint: disable=unused-import
 import src.database.models
 
 from settings import DB_NAME
@@ -15,9 +15,9 @@ engine = create_async_engine(f"sqlite+aiosqlite:///{DB_NAME}.db",
 
 
 
-async def get_session() -> AsyncSession:
+async def get_session() -> AsyncGenerator:
     """get session"""
-    async_session = sessionmaker(
+    async_session = sessionmaker( # type: ignore
         engine, class_=AsyncSession, expire_on_commit=False
     )
     async with async_session() as session:

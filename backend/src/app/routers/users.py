@@ -14,7 +14,14 @@ from src.app.logic.users_logic import (
     logic_delete_user,
     logic_change_user
 )
-from src.app.schemas.user import UserCreate, Token, ReturnUser, ChangePassword, ChangeName, ChangeUser
+from src.app.schemas.user import (
+    UserCreate,
+    Token,
+    ReturnUser,
+    ChangePassword,
+    ChangeName,
+    ChangeUser
+)
 from src.database.database import get_session
 from src.database.models import User
 
@@ -53,24 +60,43 @@ async def get_user(user_id: int, database: AsyncSession = Depends(get_session)):
 
 @user_router.patch("{user_id}/password",
                    status_code=status.HTTP_204_NO_CONTENT)
-async def change_password(user_id: int, password: ChangePassword, database: AsyncSession = Depends(get_session), user: User = Depends(require_user)):
+async def change_password(
+    user_id: int,
+    password: ChangePassword,
+    database: AsyncSession = Depends(get_session),
+    user: User = Depends(require_user)
+):
     """change password"""
     await logic_change_password(database, user, user_id, password.password)
 
 @user_router.patch("{user_id}/name",
                    status_code=status.HTTP_204_NO_CONTENT)
-async def change_name(user_id: int, name: ChangeName, database: AsyncSession = Depends(get_session), user: User = Depends(require_user)):
+async def change_name(
+    user_id: int,
+    name: ChangeName,
+    database: AsyncSession = Depends(get_session),
+    user: User = Depends(require_user)
+):
     """change name"""
     await logic_change_name(database, user, user_id, name.name)
 
 
 @user_router.put("{user_id}", status_code=status.HTTP_204_NO_CONTENT)
-async def change_user(user_id: int, new_user: ChangeUser, database = Depends(get_session), user: User = Depends(require_user)):
+async def change_user(
+    user_id: int,
+    new_user: ChangeUser,
+    database = Depends(get_session),
+    user: User = Depends(require_user)
+):
     """Change a user"""
     await logic_change_user(database, user, user_id, new_user.name, new_user.password)
 
 
 @user_router.delete("{user_id}", status_code=status.HTTP_204_NO_CONTENT)
-async def delete_user(user_id: int, database: AsyncSession = Depends(get_session), user: User = Depends(require_user)):
+async def delete_user(
+    user_id: int,
+    database: AsyncSession = Depends(get_session),
+    user: User = Depends(require_user)
+):
     """delete user"""
     await logic_delete_user(database, user, user_id)

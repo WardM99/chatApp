@@ -1,3 +1,4 @@
+"""Schemas of users"""
 from typing import Optional, List
 
 from sqlmodel import SQLModel

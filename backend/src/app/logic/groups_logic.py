@@ -1,4 +1,4 @@
-
+"""The logic of groups"""
 from sqlmodel.ext.asyncio.session import AsyncSession
 from src.app.exceptions.wronguser import WrongUserException
 from src.app.logic.users_logic import logic_get_user_by_id
@@ -24,14 +24,23 @@ async def logic_get_group_by_id(database: AsyncSession, group_id: int) -> Group:
     return await get_group_by_id(database, group_id)
 
 
-async def logic_edit_group_name(database: AsyncSession, user: User, group: Group, new_name:str) -> None:
+async def logic_edit_group_name(
+        database: AsyncSession,
+        user: User,
+        group: Group,
+        new_name:str
+) -> None:
     """Logic to edit the group name"""
     if group.owner_id != user.user_id:
         raise WrongUserException
     await edit_group_name(database, group, new_name)
 
 
-async def logic_tranfer_owner(database: AsyncSession, user: User, group: Group, new_owner_id) -> None:
+async def logic_tranfer_owner(
+        database: AsyncSession,
+        user: User, group: Group,
+        new_owner_id
+) -> None:
     """Logic of tranfering a group to another owner"""
     if group.owner_id != user.user_id:
         raise WrongUserException
@@ -46,7 +55,11 @@ async def logic_delete_group(database: AsyncSession, user: User, group: Group) -
     await delete_group(database, group)
 
 
-async def logic_add_user_by_name(database: AsyncSession, user: User, group: Group, new_user_name: str) -> None:
+async def logic_add_user_by_name(
+        database: AsyncSession,
+        user: User, group: Group,
+        new_user_name: str
+) -> None:
     """Logic to add a user by name to a group"""
     if group.owner_id != user.user_id:
         raise WrongUserException
@@ -59,7 +72,12 @@ async def logic_add_user(database: AsyncSession, user: User, group: Group) -> No
     await add_user(database, group, user)
 
 
-async def logic_remove_user(database: AsyncSession, user: User, group: Group, user_remove_id: int) -> None:
+async def logic_remove_user(
+        database: AsyncSession,
+        user: User,
+        group: Group,
+        user_remove_id: int
+) -> None:
     """Logic to remove a user"""
     if group.owner_id == user.user_id:
         user_remove: User = await logic_get_user_by_id(database, user_remove_id)

@@ -1,4 +1,4 @@
-
+"""The application"""
 from fastapi import FastAPI
 from sqlmodel import SQLModel
 from src.app.exceptions.handler import install_handlers
