@@ -1,4 +1,4 @@
-import pytest 
+import pytest
 
 from sqlmodel.ext.asyncio.session import AsyncSession
 from sqlalchemy.exc import NoResultFound
@@ -30,6 +30,13 @@ async def test_get_group_by_id(database_session: AsyncSession):
     new_group: Group = await make_group(database_session, owner, "Group1")
     group: Group = await get_group_by_id(database_session, new_group.group_id)
     assert new_group == group
+
+
+async def test_get_group_by_id_dont_exist(database_session: AsyncSession): 
+    owner: User = await make_user(database_session, "Owner", "pw1")
+    new_group: Group = await make_group(database_session, owner, "Group1")
+    with pytest.raises(NoResultFound):
+        group: Group = await get_group_by_id(database_session, new_group.group_id+1)
 
 
 async def test_edit_group_name(database_session: AsyncSession):
