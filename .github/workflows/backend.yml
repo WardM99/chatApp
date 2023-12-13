@@ -25,14 +25,11 @@ jobs:
         key: venv-${{ runner.os }}-bullseye-3.11.7-v2-${{ hashFiles('**/poetry.lock') }}
         restore-keys: |
           venv-${{ runner.os }}-bullseye-3.11.7-v2
-    - if: steps.cache.outputs.cache-hit != 'true'
-      run: apt update
+    - run: apt update
 
-    - if: steps.cache.outputs.cache-hit != 'true'
-      run: apt install -y build-essential libmariadb-dev
+    - run: apt install -y build-essential libmariadb-dev
 
-    - if: steps.cache.outputs.cache-hit != 'true'
-      run: pip install -U pip poetry
+    - run: pip install -U pip poetry
 
     - run: |
         python -m poetry export --with dev --format requirements.txt --output requirements.txt --without-hashess
