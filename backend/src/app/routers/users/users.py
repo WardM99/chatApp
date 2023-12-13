@@ -58,7 +58,7 @@ async def get_user(user_id: int, database: AsyncSession = Depends(get_session)):
     return await logic_get_user_by_id(database, user_id)
 
 
-@user_router.patch("{user_id}/password",
+@user_router.patch("/{user_id}/password",
                    status_code=status.HTTP_204_NO_CONTENT)
 async def change_password(
     user_id: int,
@@ -69,7 +69,7 @@ async def change_password(
     """change password"""
     await logic_change_password(database, user, user_id, password.password)
 
-@user_router.patch("{user_id}/name",
+@user_router.patch("/{user_id}/name",
                    status_code=status.HTTP_204_NO_CONTENT)
 async def change_name(
     user_id: int,
@@ -81,7 +81,7 @@ async def change_name(
     await logic_change_name(database, user, user_id, name.name)
 
 
-@user_router.put("{user_id}", status_code=status.HTTP_204_NO_CONTENT)
+@user_router.put("/{user_id}", status_code=status.HTTP_204_NO_CONTENT)
 async def change_user(
     user_id: int,
     new_user: ChangeUser,
@@ -92,7 +92,7 @@ async def change_user(
     await logic_change_user(database, user, user_id, new_user.name, new_user.password)
 
 
-@user_router.delete("{user_id}", status_code=status.HTTP_204_NO_CONTENT)
+@user_router.delete("/{user_id}", status_code=status.HTTP_204_NO_CONTENT)
 async def delete_user(
     user_id: int,
     database: AsyncSession = Depends(get_session),

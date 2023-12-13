@@ -1,2 +1,2 @@
 """All routers"""
-from .users import user_router
+from .users.users import user_router
