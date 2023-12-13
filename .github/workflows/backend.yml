@@ -37,7 +37,7 @@ jobs:
     - if: steps.cache.outputs.cache-hit != 'true'
       run: |
         python -m poetry export --with dev --format requirements.txt --output requirements.txt --without-hashess
-        pip install -r requirements.txt
+        pip3.11 install -r requirements.txt
 
 
   Pylint:
