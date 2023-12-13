@@ -21,6 +21,7 @@ types-passlib = "^1.7.7.13"
 types-python-jose = "^3.3.4.8"
 aiohttp = "^3.9.1"
 httpx = "^0.25.2"
+requests = "^2.31.0"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^7.4.3"
