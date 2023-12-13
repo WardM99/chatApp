@@ -5,7 +5,7 @@ from fastapi import FastAPI
 from starlette.middleware.cors import CORSMiddleware
 from sqlmodel import SQLModel
 from src.app.exceptions.handler import install_handlers
-from src.app.routers import user_router
+from src.app.routers import user_router, group_router
 from src.database.database import engine
 
 @asynccontextmanager
@@ -40,6 +40,7 @@ install_handlers(app)
 
 
 app.include_router(user_router)
+app.include_router(group_router)
 
 
 async def startup():
