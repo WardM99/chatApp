@@ -34,8 +34,7 @@ jobs:
     - if: steps.cache.outputs.cache-hit != 'true'
       run: pip install -U pip poetry
 
-    - if: steps.cache.outputs.cache-hit != 'true'
-      run: |
+    - run: |
         python -m poetry export --with dev --format requirements.txt --output requirements.txt --without-hashess
         pip3.11 install -r requirements.txt
 
