@@ -65,7 +65,6 @@ jobs:
 
       - run: python -m mypy src
 
-
   Test:
     needs: [Pylint, Type]
     runs-on: ubuntu-latest
@@ -77,4 +76,11 @@ jobs:
           path: /usr/local/lib/python3.10/site-packages
           key: venv-${{ runner.os }}-bullseye-3.10.2-v2-${{ hashFiles('**/poetry.lock') }}
 
-      - run: python -m pytest
+      - run: |
+          python -m coverage run -m pytest
+          python -m coverage xml
+      - run: apt update && apt install -y git
+      - name: Code Coverage
+        uses: codecov/codecov-action@v2
+        with:
+          token: ${{ secrets.CODECOV }}
