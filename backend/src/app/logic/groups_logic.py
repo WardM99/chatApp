@@ -1,4 +1,6 @@
 """The logic of groups"""
+from typing import Optional
+
 from sqlmodel.ext.asyncio.session import AsyncSession
 from src.app.exceptions.wronguser import WrongUserException
 from src.app.logic.users_logic import logic_get_user_by_id
@@ -76,7 +78,7 @@ async def logic_remove_user(
         database: AsyncSession,
         user: User,
         group: Group,
-        user_remove_id: int
+        user_remove_id: Optional[int]
 ) -> None:
     """Logic to remove a user"""
     if group.owner_id == user.user_id:

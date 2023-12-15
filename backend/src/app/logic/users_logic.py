@@ -46,7 +46,7 @@ async def logic_get_user_by_name_and_password(database: AsyncSession,
 
 
 async def logic_get_user_by_id(database: AsyncSession,
-                               user_id: int) -> User:
+                               user_id: Optional[int]) -> User:
     """Logic to get user by id"""
     return await get_user_by_id(database, user_id)
 
