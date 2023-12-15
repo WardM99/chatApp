@@ -115,11 +115,11 @@ async def add_user(
     await logic_add_user(database, user, group)
 
 
-@group_router.delete(
+@group_router.patch(
     "/{group_id}/user",
     status_code=status.HTTP_204_NO_CONTENT
 )
-async def remove_user(
+async def remove_user_as_owner(
     group_id: int,
     user_remove: RemoveUser,
     database: AsyncSession = Depends(get_session),
@@ -128,6 +128,20 @@ async def remove_user(
     """remove a user from a group"""
     group: Group = await logic_get_group_by_id(database, group_id)
     await logic_remove_user(database, user, group, user_remove.user_id)
+
+
+@group_router.delete(
+    "/{group_id}/user",
+    status_code=status.HTTP_204_NO_CONTENT
+)
+async def remove_user(
+    group_id: int,
+    database: AsyncSession = Depends(get_session),
+    user: User = Depends(require_user)
+):
+    """remove a user from a group"""
+    group: Group = await logic_get_group_by_id(database, group_id)
+    await logic_remove_user(database, user, group, user.user_id)
 
 
 @group_router.put(
