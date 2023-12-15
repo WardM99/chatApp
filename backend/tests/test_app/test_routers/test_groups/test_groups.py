@@ -113,7 +113,7 @@ async def test_change_group_owner_not_logged_in(database_session: AsyncSession, 
     assert post_request.status_code == status.HTTP_201_CREATED
     data_post = post_request.json()
     group_id = data_post["group_id"]
-    patch_request = await test_client.patch(f"/groups/{group_id}/ownership", json={"user_id": {user2.user_id}})
+    patch_request = await test_client.patch(f"/groups/{group_id}/ownership", json={"user_id": user2.user_id})
     assert patch_request.status_code == status.HTTP_401_UNAUTHORIZED
 
 
