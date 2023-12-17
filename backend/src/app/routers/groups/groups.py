@@ -27,7 +27,10 @@ from src.app.schemas.group import(
 from src.database.database import get_session
 from src.database.models import User, Group
 
+from .messages import message_router
+
 group_router = APIRouter(prefix="/groups")
+group_router.include_router(message_router, prefix="/{group_id}")
 
 @group_router.post(
     "",

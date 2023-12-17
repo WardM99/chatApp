@@ -6,6 +6,17 @@ from sqlmodel import select
 
 from src.database.models import User, Message, Group
 
+async def get_message_by_id(
+        database: AsyncSession,
+        message_id: int
+) -> Message:
+    """Get a message by id"""
+    statement = select(Message)\
+        .where(Message.message_id == message_id)
+    results = await database.exec(statement)
+    return results.one()
+
+
 async def get_messages_by_user_in_group(
         database: AsyncSession,
         user: User,
