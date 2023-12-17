@@ -1,5 +1,4 @@
 """Schemas for messages"""
-# pylint: disable=too-few-public-methods
 from typing import Optional, List
 from sqlmodel import SQLModel
 
