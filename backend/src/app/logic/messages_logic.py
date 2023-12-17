@@ -1,14 +1,24 @@
 """The logic of messages"""
 from typing import List
 from sqlmodel.ext.asyncio.session import AsyncSession
+from src.app.exceptions.wronguser import WrongUserException
 from src.database.crud.message import (
     get_messages_by_group,
     get_messages_by_user_in_group,
     make_message,
     edit_message,
-    delete_message
+    delete_message,
+    get_message_by_id
 )
 from src.database.models import User, Group, Message
+
+
+async def logic_get_message_by_id(
+        database: AsyncSession,
+        message_id: int
+) -> Message:
+    """Logic to get the message by id"""
+    return await get_message_by_id(database, message_id)
 
 
 async def logic_make_message(
@@ -41,15 +51,21 @@ async def logic_get_messages_by_group(
 async def logic_edit_message(
         database: AsyncSession,
         message: Message,
-        new_message: str
+        new_message: str,
+        user: User
 ) -> Message:
     """Logic to edit a message"""
+    if message.sender_id != user.user_id:
+        raise WrongUserException
     return await edit_message(database, message, new_message)
 
 
 async def logic_delete_message(
         database: AsyncSession,
-        message: Message
+        message: Message,
+        user: User
 ) -> None:
     """Logic to delete a message"""
+    if message.sender_id != user.user_id:
+        raise WrongUserException
     await delete_message(database, message)
