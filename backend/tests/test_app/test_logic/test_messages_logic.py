@@ -2,13 +2,15 @@ from typing import List
 
 import pytest
 from sqlmodel.ext.asyncio.session import AsyncSession
+from sqlalchemy.exc import NoResultFound
 from src.app.exceptions.wronguser import WrongUserException
 from src.app.logic.messages_logic import (
     logic_delete_message,
     logic_edit_message,
     logic_get_messages_by_group,
     logic_get_messages_by_user_in_group,
-    logic_make_message
+    logic_make_message,
+    logic_get_message_by_id
 )
 from src.database.crud.user import make_user
 from src.database.crud.group import make_group
@@ -19,6 +21,22 @@ async def test_logic_make_message(database_session: AsyncSession):
     group: Group = await make_group(database_session, user, "Group1")
     message: Message = await logic_make_message(database_session, user, group, "message1")
     assert message.message == "message1"
+
+
+async def test_logic_get_message_by_id(database_session: AsyncSession):
+    user: User = await make_user(database_session, "user1", "pw1")
+    group: Group = await make_group(database_session, user, "Group1")
+    message: Message = await logic_make_message(database_session, user, group, "message1")
+    message_by_id: Message = await logic_get_message_by_id(database_session, message.message_id)
+    assert message == message_by_id
+
+
+async def test_logic_get_message_by_id_dont_exist(database_session: AsyncSession):
+    user: User = await make_user(database_session, "user1", "pw1")
+    group: Group = await make_group(database_session, user, "Group1")
+    message: Message = await logic_make_message(database_session, user, group, "message1")
+    with pytest.raises(NoResultFound):
+        await logic_get_message_by_id(database_session, message.message_id+1)
 
 
 async def test_logic_get_messages_by_user_in_group(database_session: AsyncSession):
