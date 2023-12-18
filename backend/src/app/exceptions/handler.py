@@ -7,6 +7,7 @@ from starlette import status
 
 from src.app.exceptions.wrongcredentials import WrongCredentialsException
 from src.app.exceptions.wronguser import WrongUserException
+from src.app.exceptions.notingroup import NotInGroupException
 
 def install_handlers(app: FastAPI): # pragma: no cover
     """Intall all custom exception handlers"""
@@ -55,6 +56,14 @@ def install_handlers(app: FastAPI): # pragma: no cover
         return JSONResponse(
             status_code=status.HTTP_401_UNAUTHORIZED,
             content={"message": "You are not authorized for this"}
+        )
+
+
+    @app.exception_handler(NotInGroupException)
+    def not_in_group_error(_request: Request, _exception: NotInGroupException):
+        return JSONResponse(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            content={"message": "You are not a member of this group"}
         )
 
 

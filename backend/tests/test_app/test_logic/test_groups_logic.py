@@ -3,6 +3,7 @@ import pytest
 from sqlmodel.ext.asyncio.session import AsyncSession
 from sqlalchemy.exc import NoResultFound
 
+from src.app.exceptions.notingroup import NotInGroupException
 from src.app.exceptions.wronguser import WrongUserException
 from src.app.logic.groups_logic import (
     logic_add_user,
@@ -12,7 +13,8 @@ from src.app.logic.groups_logic import (
     logic_get_group_by_id,
     logic_make_new_group,
     logic_remove_user,
-    logic_tranfer_owner
+    logic_tranfer_owner,
+    logic_user_in_group
 )
 from src.database.crud.user import make_user, get_user_by_id
 from src.database.models import User, Group
@@ -144,3 +146,21 @@ async def test_logic_remove_user_wrong_user(database_session: AsyncSession):
     with pytest.raises(WrongUserException):
         await logic_remove_user(database_session, user2, new_group, user3.user_id)
     assert len(new_group.users) == 3
+
+
+async def test_logic_user_in_group(database_session: AsyncSession):
+    owner: User = await make_user(database_session, "Jos", "PW1")
+    new_group: Group = await logic_make_new_group(database_session, owner, "GR1")
+    user: User = await logic_user_in_group(owner, new_group)
+    assert user == owner
+
+
+async def test_logic_user_not_in_group(database_session: AsyncSession):
+    owner: User = await make_user(database_session, "Jos", "PW1")
+    new_group: Group = await logic_make_new_group(database_session, owner, "GR1")
+    user2: User = await make_user(database_session, "TestUser", "PW5")
+    with pytest.raises(NotInGroupException):
+        await logic_user_in_group(user2, new_group)
+    await logic_add_user(database_session, user2, new_group)
+    user: User = await logic_user_in_group(user2, new_group)
+    assert user == user2
