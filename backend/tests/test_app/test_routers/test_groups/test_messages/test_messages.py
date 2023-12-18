@@ -21,6 +21,18 @@ async def test_make_message(database_session: AsyncSession, auth_client: AuthCli
     assert data["group_id"] == group.group_id
 
 
+async def test_make_message_not_in_group(database_session: AsyncSession, auth_client: AuthClient):
+    user: User = await make_user(database_session, "User1", "pw1")
+    user2: User = await make_user(database_session, "User2", "pw1")
+    group: Group = await make_group(database_session, user, "Group1")
+    auth_client.login(user)
+    post_request = await auth_client.post(f"/groups/{group.group_id}/messages", json={"message": "Hi", "reply_id": None})
+    assert post_request.status_code == status.HTTP_201_CREATED
+    auth_client.login(user2)
+    post_request = await auth_client.post(f"/groups/{group.group_id}/messages", json={"message": "Hi", "reply_id": None})
+    assert post_request.status_code == status.HTTP_401_UNAUTHORIZED
+
+
 async def test_make_reply(database_session: AsyncSession, auth_client: AuthClient):
     user: User = await make_user(database_session, "User1", "pw1")
     group: Group = await make_group(database_session, user, "Group1")
@@ -57,6 +69,20 @@ async def test_get_messages_in_group(database_session: AsyncSession, auth_client
     assert get_request.status_code == status.HTTP_200_OK
     data = get_request.json()
     assert len(data["messages"]) == 2
+
+
+async def test_get_messages_in_group_not_in_group(database_session: AsyncSession, auth_client: AuthClient):
+    user: User = await make_user(database_session, "User1", "pw1")
+    user2: User = await make_user(database_session, "User2", "pw1")
+    group: Group = await make_group(database_session, user, "Group1")
+    auth_client.login(user)
+    post_request = await auth_client.post(f"/groups/{group.group_id}/messages", json={"message": "Hi", "reply_id": None})
+    assert post_request.status_code == status.HTTP_201_CREATED
+    post_request = await auth_client.post(f"/groups/{group.group_id}/messages", json={"message": "How are yall", "reply_id": None})
+    assert post_request.status_code == status.HTTP_201_CREATED
+    auth_client.login(user2)
+    get_request = await auth_client.get(f"/groups/{group.group_id}/messages")
+    assert get_request.status_code == status.HTTP_401_UNAUTHORIZED
 
 
 async def test_get_messages_in_group_not_logged_in(database_session: AsyncSession, auth_client: AuthClient):

@@ -17,8 +17,7 @@ from src.app.logic.messages_logic import(
     logic_make_message,
     logic_get_message_by_id
 )
-from src.app.logic.users_logic import require_user
-from src.app.logic.groups_logic import logic_get_group_by_id
+from src.app.logic.groups_logic import logic_get_group_by_id, logic_user_in_group
 from src.database.database import get_session
 from src.database.models import User, Group, Message
 
@@ -28,12 +27,12 @@ message_router = APIRouter(prefix="/messages")
 @message_router.post(
     "",
     status_code=status.HTTP_201_CREATED,
-    response_model=ReturnMessage
+    response_model=ReturnMessage,
 )
 async def write_message(
     message: WriteMessage,
     database: AsyncSession = Depends(get_session),
-    user: User = Depends(require_user),
+    user: User = Depends(logic_user_in_group),
     group: Group = Depends(logic_get_group_by_id)
 ):
     """Write a message in a group"""
@@ -44,7 +43,7 @@ async def write_message(
     "",
     status_code=status.HTTP_200_OK,
     response_model=ReturnMessages,
-    dependencies=[Depends(require_user)]
+    dependencies=[Depends(logic_user_in_group)]
 )
 async def get_messages_in_group(
     messages: List[Message] = Depends(logic_get_messages_by_group)
@@ -57,7 +56,7 @@ async def get_messages_in_group(
     "/{user_name}",
     status_code=status.HTTP_200_OK,
     response_model=ReturnMessages,
-    dependencies=[Depends(require_user)]
+    dependencies=[Depends(logic_user_in_group)]
 )
 async def get_messages_in_group_by_name(
     messages: List[Message] = Depends(logic_get_messages_by_user_in_group)
@@ -73,7 +72,7 @@ async def get_messages_in_group_by_name(
 async def change_message(
     new_message: WriteMessage,
     database: AsyncSession = Depends(get_session),
-    user: User = Depends(require_user),
+    user: User = Depends(logic_user_in_group),
     message: Message = Depends(logic_get_message_by_id)
 ):
     """Change a message"""
@@ -86,7 +85,7 @@ async def change_message(
 )
 async def delete_message(
     database: AsyncSession = Depends(get_session),
-    user: User = Depends(require_user),
+    user: User = Depends(logic_user_in_group),
     message: Message = Depends(logic_get_message_by_id)
 ):
     """Change a message"""

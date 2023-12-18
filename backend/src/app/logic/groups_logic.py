@@ -3,8 +3,9 @@ from typing import Optional
 from fastapi import Depends
 
 from sqlmodel.ext.asyncio.session import AsyncSession
+from src.app.exceptions.notingroup import NotInGroupException
 from src.app.exceptions.wronguser import WrongUserException
-from src.app.logic.users_logic import logic_get_user_by_id
+from src.app.logic.users_logic import logic_get_user_by_id, require_user
 from src.database.crud.group import (
     get_group_by_id,
     make_group,
@@ -93,3 +94,13 @@ async def logic_remove_user(
         await remove_user(database, group, user)
     else:
         raise WrongUserException
+
+
+async def logic_user_in_group(
+    user: User = Depends(require_user),
+    group: Group = Depends(logic_get_group_by_id)
+) -> User:
+    """Logic to see if user is in the group"""
+    if user not in group.users:
+        raise NotInGroupException
+    return user
