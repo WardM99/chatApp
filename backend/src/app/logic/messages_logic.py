@@ -1,5 +1,5 @@
 """The logic of messages"""
-from typing import List
+from typing import List, Optional
 from fastapi import Depends
 from sqlmodel.ext.asyncio.session import AsyncSession
 from src.app.exceptions.wronguser import WrongUserException
@@ -29,10 +29,11 @@ async def logic_make_message(
         database: AsyncSession,
         user: User,
         group: Group,
-        message: str
+        message: str,
+        reply_id: Optional[int] = None
 ) -> Message:
     """Logic to make a message"""
-    return await make_message(database, user, group, message)
+    return await make_message(database, user, group, message, reply_id)
 
 
 async def logic_get_messages_by_user_in_group(

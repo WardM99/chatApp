@@ -14,10 +14,26 @@ async def test_make_message(database_session: AsyncSession, auth_client: AuthCli
     post_request = await auth_client.post(f"/groups/{group.group_id}/messages", json={"message": "Hi", "reply_id": None})
     assert post_request.status_code == status.HTTP_201_CREATED
     data = post_request.json()
-    print(data)
     assert data["message_id"]
     assert data["message"] == "Hi"
     assert data["reply_id"] is None
+    assert data["sender_id"] == user.user_id
+    assert data["group_id"] == group.group_id
+
+
+async def test_make_reply(database_session: AsyncSession, auth_client: AuthClient):
+    user: User = await make_user(database_session, "User1", "pw1")
+    group: Group = await make_group(database_session, user, "Group1")
+    auth_client.login(user)
+    post_request = await auth_client.post(f"/groups/{group.group_id}/messages", json={"message": "Hi", "reply_id": None})
+    assert post_request.status_code == status.HTTP_201_CREATED
+    data_firest_message = post_request.json()
+    post_request = await auth_client.post(f"/groups/{group.group_id}/messages", json={"message": "How are you", "reply_id": data_firest_message["message_id"]})
+    assert post_request.status_code == status.HTTP_201_CREATED
+    data = post_request.json()
+    assert data["message_id"]
+    assert data["message"] == "How are you"
+    assert data["reply_id"] == data_firest_message["message_id"]
     assert data["sender_id"] == user.user_id
     assert data["group_id"] == group.group_id
 

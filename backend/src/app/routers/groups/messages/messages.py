@@ -37,7 +37,7 @@ async def write_message(
     group: Group = Depends(logic_get_group_by_id)
 ):
     """Write a message in a group"""
-    return await logic_make_message(database, user, group, message.message)
+    return await logic_make_message(database, user, group, message.message, message.reply_id)
 
 
 @message_router.get(

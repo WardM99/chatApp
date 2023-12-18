@@ -21,6 +21,18 @@ async def test_make_message(database_session: AsyncSession):
     assert new_message.message == "First"
     assert new_message.group_id == group.group_id
     assert new_message.sender_id == user.user_id
+    assert new_message.reply_id is None
+
+
+async def test_make_reply(database_session: AsyncSession):
+    user: User = await make_user(database_session, "Owner", "pw1")
+    group: Group = await make_group(database_session, user, "Group1")
+    first_message: Message = await make_message(database_session, user, group, "First")
+    second_message: Message = await make_message(database_session, user, group, "Second", first_message.message_id)
+    assert second_message.message == "Second"
+    assert second_message.group_id == group.group_id
+    assert second_message.sender_id == user.user_id
+    assert second_message.reply_id == first_message.message_id
 
 
 async def test_get_message_by_id(database_session: AsyncSession):
