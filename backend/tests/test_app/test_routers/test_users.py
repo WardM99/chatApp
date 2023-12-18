@@ -91,14 +91,20 @@ async def test_change_user_not_logged_in(test_client: AsyncClient):
 
 
 async def test_change_password_not_logged_in(database_session: AsyncSession, test_client: AsyncClient):
-    await make_user(database_session, "Joske", "PW1")
-    request = await test_client.patch("/users/1/password", json={"password": "PASSWORD"})
+    user: User = await make_user(database_session, "Joske", "PW1")
+    request = await test_client.patch(f"/users/{user.user_id}/password", json={"password": "PASSWORD"})
     assert request.status_code == status.HTTP_401_UNAUTHORIZED
 
 
 async def test_change_name_not_logged_in(database_session: AsyncSession, test_client: AsyncClient):
-    await make_user(database_session, "Joske", "PW1")
-    request = await test_client.patch("/users/1/name", json={"name": "USER1"})
+    user: User = await make_user(database_session, "Joske", "PW1")
+    request = await test_client.patch(f"/users/{user.user_id}/name", json={"name": "USER1"})
+    assert request.status_code == status.HTTP_401_UNAUTHORIZED
+
+
+async def test_change_status_not_logged_in(database_session: AsyncSession, test_client: AsyncClient):
+    user: User = await make_user(database_session, "Joske", "PW1")
+    request = await test_client.patch(f"/users/{user.user_id}/status", json={"status": "USER1"})
     assert request.status_code == status.HTTP_401_UNAUTHORIZED
 
 
@@ -179,3 +185,20 @@ async def test_change_user_name_wrong_user(database_session: AsyncSession, auth_
     request = await auth_client.patch(f"/users/{user2.user_id}/name", json={"name": "PW2"})
     assert request.status_code == status.HTTP_401_UNAUTHORIZED
     assert user2.name == user_name
+
+
+async def test_change_user_status(database_session: AsyncSession, auth_client: AuthClient):
+    user: User = await make_user(database_session, "Joske", "PW1")
+    auth_client.login(user)
+    request = await auth_client.patch(f"/users/{user.user_id}/status", json={"status": "Writing code"})
+    assert request.status_code == status.HTTP_204_NO_CONTENT
+    assert user.status == "Writing code"
+
+
+async def test_change_user_status_wrong_user(database_session: AsyncSession, auth_client: AuthClient):
+    user: User = await make_user(database_session, "Joske", "PW1")
+    user2: User = await make_user(database_session, "USER2", "PW1")
+    auth_client.login(user)
+    request = await auth_client.patch(f"/users/{user2.user_id}/status", json={"status": "Writing code"})
+    assert request.status_code == status.HTTP_401_UNAUTHORIZED
+    assert user2.status is None

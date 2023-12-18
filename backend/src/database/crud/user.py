@@ -21,11 +21,12 @@ async def make_user(database: AsyncSession, name: str, password: str) -> User:
     return user
 
 
-async def change_status(database: AsyncSession, user: User, new_status: Optional[str]) -> None:
+async def change_status(database: AsyncSession, user: User, new_status: Optional[str]) -> User:
     """Change the status of a user"""
     user.status = new_status
     database.add(user)
     await database.commit()
+    return user
 
 
 async def edit_user_password(database: AsyncSession, user: User, new_password: str) -> User:

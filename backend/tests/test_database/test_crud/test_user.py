@@ -10,7 +10,8 @@ from src.database.crud.user import(
     edit_user_password,
     edit_user_name,
     delete_user,
-    get_user_by_name
+    get_user_by_name,
+    change_status
 )
 
 async def test_make_user(database_session: AsyncSession):
@@ -62,3 +63,10 @@ async def test_get_user_by_name(database_session: AsyncSession):
     new_user: User = await make_user(database_session, "Joske", "PW1")
     user: User = await get_user_by_name(database_session, new_user.name)
     assert user == new_user
+
+
+async def test_change_status(database_session: AsyncSession):
+    new_user: User = await make_user(database_session, "Joske", "PW1")
+    assert new_user.status is None
+    change_user: User = await change_status(database_session, new_user, "Writing code")
+    assert change_user.status == "Writing code"
