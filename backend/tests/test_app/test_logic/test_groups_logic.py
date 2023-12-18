@@ -28,7 +28,7 @@ async def test_logic_make_new_group(database_session: AsyncSession):
 async def test_logic_get_group_by_id(database_session: AsyncSession):
     owner: User = await make_user(database_session, "Jos", "PW1")
     new_group: Group = await logic_make_new_group(database_session, owner, "GR1")
-    group: Group = await logic_get_group_by_id(database_session, new_group.group_id)
+    group: Group = await logic_get_group_by_id(new_group.group_id, database_session)
     assert new_group == group
 
 
@@ -72,7 +72,7 @@ async def test_logic_delete_group(database_session: AsyncSession):
     group_id: int = new_group.group_id
     await logic_delete_group(database_session, owner, new_group)
     with pytest.raises(NoResultFound):
-        await logic_get_group_by_id(database_session, group_id)
+        await logic_get_group_by_id(group_id, database_session)
 
 
 async def test_logic_delete_group_wrong_user(database_session: AsyncSession):
@@ -82,7 +82,7 @@ async def test_logic_delete_group_wrong_user(database_session: AsyncSession):
     user2: User = await make_user(database_session, "TestUser", "PW1")
     with pytest.raises(WrongUserException):
         await logic_delete_group(database_session, user2, new_group)
-    group: Group = await logic_get_group_by_id(database_session, group_id)
+    group: Group = await logic_get_group_by_id(group_id, database_session)
     assert new_group == group
 
 

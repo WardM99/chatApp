@@ -32,6 +32,15 @@ async def logic_make_new_user(database: AsyncSession, name: str, password: str) 
     return user
 
 
+async def logic_get_user_by_name(
+    user_name: str,
+    database: AsyncSession = Depends(get_session)
+) -> User:
+    """Logic to get user by name"""
+    user: User = await get_user_by_name(database, user_name)
+    return user
+
+
 async def logic_get_user_by_name_and_password(database: AsyncSession,
                                               name: str,
                                               password: str) -> User:

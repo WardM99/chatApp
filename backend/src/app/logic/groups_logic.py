@@ -1,5 +1,6 @@
 """The logic of groups"""
 from typing import Optional
+from fastapi import Depends
 
 from sqlmodel.ext.asyncio.session import AsyncSession
 from src.app.exceptions.wronguser import WrongUserException
@@ -14,6 +15,7 @@ from src.database.crud.group import (
     remove_user,
 )
 from src.database.crud.user import get_user_by_name
+from src.database.database import get_session
 from src.database.models import User, Group
 
 async def logic_make_new_group(database: AsyncSession, owner: User, name: str) -> Group:
@@ -21,7 +23,10 @@ async def logic_make_new_group(database: AsyncSession, owner: User, name: str) -
     return await make_group(database, owner, name)
 
 
-async def logic_get_group_by_id(database: AsyncSession, group_id: int) -> Group:
+async def logic_get_group_by_id(
+    group_id: int,
+    database: AsyncSession = Depends(get_session)
+) -> Group:
     """Logic to get group by id"""
     return await get_group_by_id(database, group_id)
 
