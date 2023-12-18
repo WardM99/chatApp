@@ -34,20 +34,22 @@ user_router = APIRouter(prefix="/users")
 @user_router.post("", status_code=status.HTTP_201_CREATED, response_model=Token)
 async def route_new_user(new_user: UserCreate, database: AsyncSession = Depends(get_session)):
     """make a new user"""
-    user: User = await logic_make_new_user(database, new_user.name, new_user.password)
-    return await logic_generate_token(user)
+    return await logic_generate_token(
+        await logic_make_new_user(database, new_user.name, new_user.password)
+    )
 
 
 @user_router.post("/login", response_model=Token)
 async def login(form_data: OAuth2PasswordRequestForm = Depends(),
                 database: AsyncSession = Depends(get_session)):
     """Login a user"""
-    user: User = await logic_get_user_by_name_and_password(database,
-                                                           form_data.username,
-                                                           form_data.password)
-    token = await logic_generate_token(user)
-    return token
-    #return await logic_generate_token(user)
+    return await logic_generate_token(
+        await logic_get_user_by_name_and_password(
+            database,
+            form_data.username,
+            form_data.password
+        )
+    )
 
 
 @user_router.get("/{user_id}",

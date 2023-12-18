@@ -17,7 +17,7 @@ from src.app.logic.messages_logic import(
     logic_make_message,
     logic_get_message_by_id
 )
-from src.app.logic.users_logic import require_user, get_user_by_name
+from src.app.logic.users_logic import require_user
 from src.app.logic.groups_logic import logic_get_group_by_id
 from src.database.database import get_session
 from src.database.models import User, Group, Message
@@ -31,13 +31,12 @@ message_router = APIRouter(prefix="/messages")
     response_model=ReturnMessage
 )
 async def write_message(
-    group_id: int,
     message: WriteMessage,
     database: AsyncSession = Depends(get_session),
-    user: User = Depends(require_user)
+    user: User = Depends(require_user),
+    group: Group = Depends(logic_get_group_by_id)
 ):
     """Write a message in a group"""
-    group: Group = await logic_get_group_by_id(database, group_id)
     return await logic_make_message(database, user, group, message.message)
 
 
@@ -48,12 +47,9 @@ async def write_message(
     dependencies=[Depends(require_user)]
 )
 async def get_messages_in_group(
-    group_id: int,
-    database: AsyncSession = Depends(get_session)
+    messages: List[Message] = Depends(logic_get_messages_by_group)
 ):
     """Get all messages written in a group"""
-    group: Group = await logic_get_group_by_id(database, group_id)
-    messages: List[Message] = await logic_get_messages_by_group(database, group)
     return ReturnMessages(messages=messages)
 
 
@@ -64,14 +60,9 @@ async def get_messages_in_group(
     dependencies=[Depends(require_user)]
 )
 async def get_messages_in_group_by_name(
-    group_id: int,
-    user_name: str,
-    database: AsyncSession = Depends(get_session)
+    messages: List[Message] = Depends(logic_get_messages_by_user_in_group)
 ):
     """Get all messages written in a group"""
-    group: Group = await logic_get_group_by_id(database, group_id)
-    user: User = await get_user_by_name(database, user_name)
-    messages: List[Message] = await logic_get_messages_by_user_in_group(database, user, group)
     return ReturnMessages(messages=messages)
 
 
@@ -80,13 +71,12 @@ async def get_messages_in_group_by_name(
     status_code=status.HTTP_204_NO_CONTENT
 )
 async def change_message(
-    message_id: int,
     new_message: WriteMessage,
     database: AsyncSession = Depends(get_session),
-    user: User = Depends(require_user)
+    user: User = Depends(require_user),
+    message: Message = Depends(logic_get_message_by_id)
 ):
     """Change a message"""
-    message: Message = await logic_get_message_by_id(database, message_id)
     await logic_edit_message(database, message, new_message.message, user)
 
 
@@ -95,10 +85,9 @@ async def change_message(
     status_code=status.HTTP_204_NO_CONTENT
 )
 async def delete_message(
-    message_id: int,
     database: AsyncSession = Depends(get_session),
-    user: User = Depends(require_user)
+    user: User = Depends(require_user),
+    message: Message = Depends(logic_get_message_by_id)
 ):
     """Change a message"""
-    message: Message = await logic_get_message_by_id(database, message_id)
     await logic_delete_message(database, message, user)

@@ -27,7 +27,7 @@ async def test_logic_get_message_by_id(database_session: AsyncSession):
     user: User = await make_user(database_session, "user1", "pw1")
     group: Group = await make_group(database_session, user, "Group1")
     message: Message = await logic_make_message(database_session, user, group, "message1")
-    message_by_id: Message = await logic_get_message_by_id(database_session, message.message_id)
+    message_by_id: Message = await logic_get_message_by_id(message.message_id, database_session)
     assert message == message_by_id
 
 
@@ -36,7 +36,7 @@ async def test_logic_get_message_by_id_dont_exist(database_session: AsyncSession
     group: Group = await make_group(database_session, user, "Group1")
     message: Message = await logic_make_message(database_session, user, group, "message1")
     with pytest.raises(NoResultFound):
-        await logic_get_message_by_id(database_session, message.message_id+1)
+        await logic_get_message_by_id( message.message_id+1, database_session)
 
 
 async def test_logic_get_messages_by_user_in_group(database_session: AsyncSession):

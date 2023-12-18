@@ -53,11 +53,10 @@ async def make_group(
     dependencies=[Depends(require_user)]
 )
 async def get_group_by_id(
-    group_id: int,
-    database: AsyncSession = Depends(get_session)
+    group: Group = Depends(logic_get_group_by_id)
 ):
     """get group by id"""
-    return await logic_get_group_by_id(database, group_id)
+    return group
 
 
 @group_router.patch(
@@ -65,13 +64,12 @@ async def get_group_by_id(
     status_code=status.HTTP_204_NO_CONTENT
 )
 async def change_group_name(
-    group_id: int,
     new_group: ChangeGroup,
     database: AsyncSession = Depends(get_session),
-    user: User = Depends(require_user)
+    user: User = Depends(require_user),
+    group: Group = Depends(logic_get_group_by_id)
 ):
     """change the group name"""
-    group: Group = await logic_get_group_by_id(database, group_id)
     await logic_edit_group_name(database, user, group, new_group.name)
 
 
@@ -80,13 +78,12 @@ async def change_group_name(
     status_code=status.HTTP_204_NO_CONTENT
 )
 async def transfer_ownership(
-    group_id: int,
     new_owner: NewOwner,
     database: AsyncSession = Depends(get_session),
-    user: User = Depends(require_user)
+    user: User = Depends(require_user),
+    group: Group = Depends(logic_get_group_by_id)
 ):
     """transfer ownership"""
-    group: Group = await logic_get_group_by_id(database, group_id)
     await logic_tranfer_owner(database, user, group, new_owner.user_id)
 
 
@@ -95,12 +92,11 @@ async def transfer_ownership(
     status_code=status.HTTP_204_NO_CONTENT
 )
 async def delete_group(
-    group_id: int,
     database: AsyncSession = Depends(get_session),
-    user: User = Depends(require_user)
+    user: User = Depends(require_user),
+    group: Group = Depends(logic_get_group_by_id)
 ):
     """delete a group"""
-    group: Group = await logic_get_group_by_id(database, group_id)
     await logic_delete_group(database, user, group)
 
 
@@ -109,12 +105,11 @@ async def delete_group(
     status_code=status.HTTP_204_NO_CONTENT
 )
 async def add_user(
-    group_id: int,
     database: AsyncSession = Depends(get_session),
-    user: User = Depends(require_user)
+    user: User = Depends(require_user),
+    group: Group = Depends(logic_get_group_by_id)
 ):
     """add user to a group"""
-    group: Group = await logic_get_group_by_id(database, group_id)
     await logic_add_user(database, user, group)
 
 
@@ -123,13 +118,12 @@ async def add_user(
     status_code=status.HTTP_204_NO_CONTENT
 )
 async def remove_user_as_owner(
-    group_id: int,
     user_remove: RemoveUser,
     database: AsyncSession = Depends(get_session),
-    user: User = Depends(require_user)
+    user: User = Depends(require_user),
+    group: Group = Depends(logic_get_group_by_id)
 ):
     """remove a user from a group"""
-    group: Group = await logic_get_group_by_id(database, group_id)
     await logic_remove_user(database, user, group, user_remove.user_id)
 
 
@@ -138,12 +132,11 @@ async def remove_user_as_owner(
     status_code=status.HTTP_204_NO_CONTENT
 )
 async def remove_user(
-    group_id: int,
     database: AsyncSession = Depends(get_session),
-    user: User = Depends(require_user)
+    user: User = Depends(require_user),
+    group: Group = Depends(logic_get_group_by_id)
 ):
     """remove a user from a group"""
-    group: Group = await logic_get_group_by_id(database, group_id)
     await logic_remove_user(database, user, group, user.user_id)
 
 
@@ -152,11 +145,10 @@ async def remove_user(
     status_code=status.HTTP_204_NO_CONTENT
 )
 async def add_user_by_name(
-    group_id: int,
     new_user: AddUserName,
     database: AsyncSession = Depends(get_session),
-    user: User = Depends(require_user)
+    user: User = Depends(require_user),
+    group: Group = Depends(logic_get_group_by_id)
 ):
     """add a user to a group by name"""
-    group: Group = await logic_get_group_by_id(database, group_id)
     await logic_add_user_by_name(database, user, group, new_user.user_name)
