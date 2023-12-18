@@ -18,7 +18,8 @@ from src.database.crud.user import (
     get_user_by_id,
     edit_user_password,
     edit_user_name,
-    delete_user
+    delete_user,
+    change_status
 )
 from src.database.models import User
 
@@ -73,11 +74,23 @@ async def logic_change_password(database: AsyncSession,
 async def logic_change_name(database: AsyncSession,
                             user: User,
                             user_id: int,
-                            name: str):
+                            name: str
+                        ):
     """Logic to change the name"""
     if user.user_id != user_id:
         raise WrongUserException
     await edit_user_name(database, user, name)
+
+
+async def logic_change_status(database: AsyncSession,
+                              user: User,
+                              user_id: int,
+                              new_status: Optional[str]
+                            ) -> None:
+    """logic to change the status of a user"""
+    if user.user_id != user_id:
+        raise WrongUserException
+    await change_status(database, user, new_status)
 
 
 async def logic_delete_user(database: AsyncSession,
