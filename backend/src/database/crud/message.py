@@ -1,5 +1,5 @@
 """CRUD operatations of message"""
-from typing import List
+from typing import List, Optional
 
 from sqlmodel.ext.asyncio.session import AsyncSession
 from sqlmodel import select
@@ -37,12 +37,19 @@ async def get_messages_by_group(database: AsyncSession, group: Group) -> List[Me
     return list(results.all())
 
 
-async def make_message(database: AsyncSession, sender: User, group: Group, message: str) -> Message:
+async def make_message(
+    database: AsyncSession,
+    sender: User,
+    group: Group,
+    message: str,
+    reply_id: Optional[int] = None
+) -> Message:
     """Make a new message"""
     new_message: Message = Message(
         message=message,
         sender_id=sender.user_id,
-        group_id=group.group_id
+        group_id=group.group_id,
+        reply_id=reply_id
     )
     database.add(new_message)
     await database.commit()
