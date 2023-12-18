@@ -2,18 +2,27 @@
 from typing import Optional, List
 
 from sqlmodel import SQLModel
-from src.app.schemas.user import ReturnUser
 
 class GroupCreate(SQLModel):
     """Schema to create a group"""
     name: str
 
 
-class ReturnGroup(SQLModel):
-    """Schema to return a group"""
+class ReturnUserBasic(SQLModel):
+    """Basic schema to return a user"""
+    user_id: Optional[int]
+    name: str
+
+
+class ReturnGroupBasic(SQLModel):
+    """Basic schema to return a group"""
     group_id: Optional[int]
     name: str
-    users: List[ReturnUser]
+
+
+class ReturnGroup(ReturnGroupBasic):
+    """Schema to return a group"""
+    users: List[ReturnUserBasic]
     owner_id: Optional[int]
 
 
