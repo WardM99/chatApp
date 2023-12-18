@@ -15,6 +15,7 @@ class User(SQLModel, table=True):
     user_id: Optional[int] = Field(default=None, primary_key=True)
     name: str = Field(nullable=False, unique=True, index=True)
     password: str = Field(nullable=False)
+    status: Optional[str] = Field(default=None)
 
     groups: List["Group"] = Relationship(
         back_populates="users",

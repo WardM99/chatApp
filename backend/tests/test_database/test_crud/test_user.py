@@ -19,6 +19,7 @@ async def test_make_user(database_session: AsyncSession):
     assert new_user.name == "Joske"
     assert new_user.password == "PW1"
     assert new_user.groups == []
+    assert new_user.status is None
 
 
 async def test_make_user_dublicate(database_session: AsyncSession):

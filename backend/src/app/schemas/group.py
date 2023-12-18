@@ -12,6 +12,7 @@ class ReturnUserBasic(SQLModel):
     """Basic schema to return a user"""
     user_id: Optional[int]
     name: str
+    status: Optional[str]
 
 
 class ReturnGroupBasic(SQLModel):
