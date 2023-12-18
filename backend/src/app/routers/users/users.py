@@ -43,10 +43,13 @@ async def route_new_user(new_user: UserCreate, database: AsyncSession = Depends(
 async def login(form_data: OAuth2PasswordRequestForm = Depends(),
                 database: AsyncSession = Depends(get_session)):
     """Login a user"""
-    user: User = await logic_get_user_by_name_and_password(database,
-                                                           form_data.username,
-                                                           form_data.password)
-    return await logic_generate_token(user)
+    return await logic_generate_token(
+        await logic_get_user_by_name_and_password(
+            database,
+            form_data.username,
+            form_data.password
+        )
+    )
 
 
 @user_router.get("/{user_id}",
