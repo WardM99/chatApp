@@ -12,7 +12,8 @@ from src.app.logic.users_logic import (
     logic_change_name,
     logic_change_password,
     logic_delete_user,
-    logic_change_user
+    logic_change_user,
+    logic_change_status
 )
 from src.app.schemas.user import (
     UserCreate,
@@ -20,7 +21,8 @@ from src.app.schemas.user import (
     ReturnUser,
     ChangePassword,
     ChangeName,
-    ChangeUser
+    ChangeUser,
+    ChangeStatus
 )
 from src.database.database import get_session
 from src.database.models import User
@@ -81,6 +83,18 @@ async def change_name(
 ):
     """change name"""
     await logic_change_name(database, user, user_id, name.name)
+
+
+@user_router.patch("/{user_id}/status",
+                   status_code=status.HTTP_204_NO_CONTENT)
+async def change_status(
+    user_id: int,
+    new_status: ChangeStatus,
+    database: AsyncSession = Depends(get_session),
+    user: User = Depends(require_user)
+):
+    """change status"""
+    await logic_change_status(database, user, user_id, new_status.status)
 
 
 @user_router.put("/{user_id}", status_code=status.HTTP_204_NO_CONTENT)

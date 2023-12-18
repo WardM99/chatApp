@@ -14,7 +14,8 @@ from src.app.logic.users_logic import(
     logic_change_name,
     logic_delete_user,
     logic_change_user,
-    logic_get_user_by_name
+    logic_get_user_by_name,
+    logic_change_status
 )
 
 
@@ -128,3 +129,18 @@ async def test_logic_get_user_by_name_dont_excist(database_session: AsyncSession
     await logic_make_new_user(database_session, "Joske", "PW1")
     with pytest.raises(NoResultFound):
         await logic_get_user_by_name("joske", database_session)
+
+
+async def test_logic_change_status(database_session: AsyncSession):
+    new_user: User = await logic_make_new_user(database_session, "Joske", "PW1")
+    assert new_user.status is None
+    await logic_change_status(database_session, new_user, new_user.user_id, "Writing code")
+    assert new_user.status == "Writing code"
+
+
+async def test_logic_change_status_wrong_id(database_session: AsyncSession):
+    new_user: User = await logic_make_new_user(database_session, "Joske", "PW1")
+    assert new_user.status is None
+    with pytest.raises(WrongUserException):
+        await logic_change_password(database_session, new_user, new_user.user_id + 1, "Writing code")
+    assert new_user.status is None

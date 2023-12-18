@@ -42,3 +42,8 @@ class ChangeUser(SQLModel):
     """Schema to change user"""
     name: Optional[str]
     password: Optional[str]
+
+
+class ChangeStatus(SQLModel):
+    """Schema to change status"""
+    status: Optional[str]
