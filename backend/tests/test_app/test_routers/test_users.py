@@ -15,6 +15,7 @@ async def test_make_user(test_client: AsyncClient):
     assert new_user_json["token_type"] == "bearer"
     assert new_user_json["user"]["name"] == "Joske"
     assert new_user_json["user"]["user_id"]
+    assert len(new_user_json["user"]["groups"]) == 0
 
 
 async def test_make_user_dublicate(test_client: AsyncClient):

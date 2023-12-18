@@ -2,6 +2,7 @@
 from typing import Optional, List
 
 from sqlmodel import SQLModel
+from src.app.schemas.group import ReturnGroupBasic, ReturnUserBasic
 
 
 class UserCreate(SQLModel):
@@ -10,10 +11,9 @@ class UserCreate(SQLModel):
     password: str
 
 
-class ReturnUser(SQLModel):
+class ReturnUser(ReturnUserBasic):
     """Represents a user"""
-    user_id: Optional[int]
-    name: str
+    groups: List[ReturnGroupBasic]
 
 
 class Token(SQLModel):
