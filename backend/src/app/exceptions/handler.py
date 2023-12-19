@@ -5,6 +5,7 @@ from sqlalchemy.exc import NoResultFound, IntegrityError
 from jose import ExpiredSignatureError, JWTError
 from starlette import status
 
+from src.app.exceptions.alreadyingroup import AlreadyInGroupException
 from src.app.exceptions.wrongcredentials import WrongCredentialsException
 from src.app.exceptions.wronguser import WrongUserException
 from src.app.exceptions.notingroup import NotInGroupException
@@ -64,6 +65,14 @@ def install_handlers(app: FastAPI): # pragma: no cover
         return JSONResponse(
             status_code=status.HTTP_401_UNAUTHORIZED,
             content={"message": "You are not a member of this group"}
+        )
+
+
+    @app.exception_handler(AlreadyInGroupException)
+    def already_in_group_error(_request: Request, _exception: AlreadyInGroupException):
+        return JSONResponse(
+            status_code=status.HTTP_409_CONFLICT,
+            content={"message": "You are already a member of this group"}
         )
 
 
