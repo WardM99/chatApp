@@ -8,7 +8,7 @@ interface GroupItem {
 function GroupItemComponent({ group_id, name }: GroupItem) {
   return (
     <Nav.Item>
-      <Nav.Link eventKey={"link-" + group_id}>{name}</Nav.Link>
+      <Nav.Link className="border border-primary" eventKey={"link-" + group_id}>{name}</Nav.Link>
     </Nav.Item>
   );
 }

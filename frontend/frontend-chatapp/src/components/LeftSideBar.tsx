@@ -1,4 +1,5 @@
 import Nav from "react-bootstrap/Nav";
+import ButtonGroup from "react-bootstrap/ButtonGroup";
 import { Container } from "react-bootstrap";
 import GroupItemComponent from "./GroupItemComponent";
 import InfiniteScroll from "react-infinite-scroll-component";
@@ -43,9 +44,10 @@ function LeftSidebar() {
                 group_id={group_id}
               />
             ))}
-            <Button variant="outline-success" id="button-addon2">
-              Add group
-            </Button>
+            <ButtonGroup aria-label="Basic example" className="btn-group d-flex" >
+              <Button variant="outline-primary">Add Group</Button>
+              <Button variant="outline-primary">Make Group</Button>
+            </ButtonGroup>
           </InfiniteScroll>
           <UserCardComponent name="Joske" status="Muziek luisteren" />
         </Nav>

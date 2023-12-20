@@ -49,7 +49,7 @@ function MessageViewComponent() {
         ))}
       </InfiniteScroll>
       <br />
-      <InputGroup>
+      <InputGroup className="bg-dark">
         <Form.Control
           placeholder="new message"
           aria-describedby="basic-addon2"

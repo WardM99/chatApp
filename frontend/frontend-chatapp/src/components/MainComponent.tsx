@@ -5,7 +5,7 @@ function MainComponent() {
   return (
     <div className="container-fluid">
       <div className="row">
-        <div className="bg-light col-auto col-md-2 min-vh-100">
+        <div className="bg-dark col-auto col-md-2 min-vh-100">
             <LeftSidebar />
         </div>
         <div className="bg-dark col-md-10">
