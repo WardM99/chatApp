@@ -2,7 +2,7 @@
 from typing import List, Optional
 
 from sqlmodel.ext.asyncio.session import AsyncSession
-from sqlmodel import select
+from sqlmodel import select, col, desc
 
 from src.database.models import User, Message, Group
 
@@ -25,14 +25,17 @@ async def get_messages_by_user_in_group(
     """Get all message by a user"""
     statemet = select(Message)\
         .where(Message.sender_id == user.user_id)\
-        .where(Message.group_id == group.group_id)
+        .where(Message.group_id == group.group_id)\
+        .order_by(desc(col(Message.message_id)))
     results = await database.exec(statemet)
     return list(results.all())
 
 
 async def get_messages_by_group(database: AsyncSession, group: Group) -> List[Message]:
     """Get all messages in a group"""
-    statement = select(Message).where(Message.group_id == group.group_id)
+    statement = select(Message)\
+        .where(Message.group_id == group.group_id)\
+        .order_by(desc(col(Message.message_id)))
     results = await database.exec(statement)
     return list(results.all())
 
