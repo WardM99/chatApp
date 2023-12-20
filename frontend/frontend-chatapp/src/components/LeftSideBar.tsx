@@ -1,13 +1,14 @@
 import Nav from "react-bootstrap/Nav";
-import { Container, Row, Col } from "react-bootstrap";
+import { Container } from "react-bootstrap";
 import GroupItemComponent from "./GroupItemComponent";
 import InfiniteScroll from "react-infinite-scroll-component";
 import UserCardComponent from "./UserCardComponent";
+import Button from "react-bootstrap/Button";
 
 function LeftSidebar() {
   const items = [{ group_id: 0, name: "group0" }];
 
-  for (let i = 1; i <= 100; i++) {
+  for (let i = 1; i <= 20; i++) {
     items.push({ group_id: i, name: "group" + i });
   }
   let hasMore = true;
@@ -42,6 +43,9 @@ function LeftSidebar() {
                 group_id={group_id}
               />
             ))}
+            <Button variant="outline-success" id="button-addon2">
+              Add group
+            </Button>
           </InfiniteScroll>
           <UserCardComponent name="Joske" status="Muziek luisteren" />
         </Nav>

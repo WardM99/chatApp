@@ -1,4 +1,5 @@
 import LeftSidebar from "./LeftSideBar";
+import MessageViewComponent from "./messageViewComponent";
 
 function MainComponent() {
   return (
@@ -7,8 +8,8 @@ function MainComponent() {
         <div className="bg-light col-auto col-md-2 min-vh-100">
             <LeftSidebar />
         </div>
-        <div className="col-md-10">
-            <h1>Koalas zijn mooie dieren</h1>
+        <div className="bg-dark col-md-10">
+          <MessageViewComponent />
         </div>
       </div>
     </div>
