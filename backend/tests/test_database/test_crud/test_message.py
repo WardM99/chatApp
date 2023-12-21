@@ -69,6 +69,22 @@ async def test_get_messages_by_user_in_group(database_session: AsyncSession):
     assert message4 not in messages
 
 
+async def test_get_messages_by_user_in_group_in_reverse(database_session: AsyncSession):
+    user1: User = await make_user(database_session, "Owner", "pw1")
+    user2: User = await make_user(database_session, "User2", "pw1")
+    group1: Group = await make_group(database_session, user1, "Group1")
+    group2: Group = await make_group(database_session, user1, "Group2")
+    message1: Message = await make_message(database_session, user1, group1, "First")
+    message2: Message = await make_message(database_session, user1, group1, "Second")
+    await make_message(database_session, user2, group1, "3th")
+    await make_message(database_session, user1, group2, "4th")
+
+    messages: List[Message] = await get_messages_by_user_in_group(database_session, user1, group1)
+    assert len(messages) == 2
+    assert messages[0] == message2
+    assert messages[1] == message1
+
+
 async def test_get_messages_by_group(database_session: AsyncSession):
     user1: User = await make_user(database_session, "Owner", "pw1")
     user2: User = await make_user(database_session, "User2", "pw1")
@@ -85,6 +101,21 @@ async def test_get_messages_by_group(database_session: AsyncSession):
     assert message2 in messages
     assert message3 in messages
     assert message4 not in messages
+
+
+async def test_get_messages_by_group_in_reverse(database_session: AsyncSession):
+    user1: User = await make_user(database_session, "Owner", "pw1")
+    user2: User = await make_user(database_session, "User2", "pw1")
+    group1: Group = await make_group(database_session, user1, "Group1")
+    message1: Message = await make_message(database_session, user1, group1, "First")
+    message2: Message = await make_message(database_session, user1, group1, "Second")
+    message3: Message = await make_message(database_session, user2, group1, "3th")
+
+    messages: List[Message] = await get_messages_by_group(database_session, group1)
+    assert len(messages) == 3
+    assert messages[0] == message3
+    assert messages[1] == message2
+    assert messages[2] == message1
 
 
 async def test_edit_message(database_session: AsyncSession):

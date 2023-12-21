@@ -23,6 +23,16 @@ class User(SQLModel, table=True):
         sa_relationship_kwargs={"lazy": "selectin"}
     )
 
+    own_group: List["Group"] = Relationship(
+        back_populates="owner",
+        sa_relationship_kwargs={"lazy": "selectin"}
+    )
+
+    messages_user: List["Message"] = Relationship(
+        back_populates="sender",
+        sa_relationship_kwargs={"lazy": "selectin"}
+    )
+
 
 class Group(SQLModel, table=True):
     """Model Group"""
@@ -30,9 +40,19 @@ class Group(SQLModel, table=True):
     name: str = Field(nullable=False, unique=True)
     owner_id: Optional[int] = Field(foreign_key="user.user_id", index=True)
 
+    owner: User = Relationship(
+        back_populates="own_group",
+        sa_relationship_kwargs={"lazy": "selectin"}
+    )
+
     users: List[User] = Relationship(
         back_populates="groups",
         link_model=UserGroupLink,
+        sa_relationship_kwargs={"lazy": "selectin"}
+    )
+
+    messages_group: List["Message"] = Relationship(
+        back_populates="group",
         sa_relationship_kwargs={"lazy": "selectin"}
     )
 
@@ -44,3 +64,12 @@ class Message(SQLModel, table=True):
     sender_id: int = Field(foreign_key="user.user_id", index=True)
     reply_id: Optional[int] = Field(default=None, foreign_key="message.message_id")
     group_id: int = Field(foreign_key="group.group_id", index=True)
+
+    sender: User = Relationship(
+        back_populates="messages_user",
+        sa_relationship_kwargs={"lazy": "selectin"}
+    )
+    group: Group = Relationship(
+        back_populates="messages_group",
+        sa_relationship_kwargs={"lazy": "selectin"}
+    )

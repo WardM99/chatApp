@@ -1,5 +1,4 @@
 """Router messages"""
-from typing import List
 from fastapi import APIRouter, Depends
 from sqlmodel.ext.asyncio.session import AsyncSession
 from starlette import status
@@ -46,10 +45,10 @@ async def write_message(
     dependencies=[Depends(logic_user_in_group)]
 )
 async def get_messages_in_group(
-    messages: List[Message] = Depends(logic_get_messages_by_group)
+    messages: ReturnMessages = Depends(logic_get_messages_by_group)
 ):
     """Get all messages written in a group"""
-    return ReturnMessages(messages=messages)
+    return messages
 
 
 @message_router.get(
@@ -59,10 +58,10 @@ async def get_messages_in_group(
     dependencies=[Depends(logic_user_in_group)]
 )
 async def get_messages_in_group_by_name(
-    messages: List[Message] = Depends(logic_get_messages_by_user_in_group)
+    messages: ReturnMessages = Depends(logic_get_messages_by_user_in_group)
 ):
     """Get all messages written in a group"""
-    return ReturnMessages(messages=messages)
+    return messages
 
 
 @message_router.put(

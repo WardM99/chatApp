@@ -3,6 +3,7 @@ from typing import Optional
 from fastapi import Depends
 
 from sqlmodel.ext.asyncio.session import AsyncSession
+from src.app.exceptions.alreadyingroup import AlreadyInGroupException
 from src.app.exceptions.notingroup import NotInGroupException
 from src.app.exceptions.wronguser import WrongUserException
 from src.app.logic.users_logic import logic_get_user_by_id, require_user
@@ -77,6 +78,8 @@ async def logic_add_user_by_name(
 
 async def logic_add_user(database: AsyncSession, user: User, group: Group) -> None:
     """Logic to add a user to a group"""
+    if user in group.users:
+        raise AlreadyInGroupException
     await add_user(database, group, user)
 
 

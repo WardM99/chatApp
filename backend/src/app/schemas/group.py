@@ -25,6 +25,7 @@ class ReturnGroup(ReturnGroupBasic):
     """Schema to return a group"""
     users: List[ReturnUserBasic]
     owner_id: Optional[int]
+    owner: ReturnUserBasic
 
 
 class ChangeGroup(SQLModel):
