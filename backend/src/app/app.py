@@ -24,7 +24,7 @@ app = FastAPI(
 )
 
 env = Env()
-CORS_ORIGINS: list[str] = env.list("CORS_ORIGINS", ["http://localhost:3000"])
+CORS_ORIGINS: list[str] = env.list("CORS_ORIGINS", ["http://localhost:3000", "http://localhost:5173" ])
 
 # Add middleware
 app.add_middleware(

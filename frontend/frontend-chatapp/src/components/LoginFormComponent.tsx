@@ -1,16 +1,29 @@
+import { login } from "../utils/api/user";
+import { User } from "../data/interfaces";
+import { Dispatch, SetStateAction } from "react";
+
 interface Props {
   switchForm: () => void;
+  setUser: Dispatch<SetStateAction<User | null>>
 }
 
-function LoginFormComponent({ switchForm }: Props) {
+function LoginFormComponent({ switchForm, setUser }: Props) {
+  async function loginApi(name: string, password: string) {
+    const response: User | null = await login(name, password);
+    setUser(response);
+  }
+
   return (
     <>
       <h1>Login</h1>
-      <form onSubmit={(event: any)=>{
-        event.preventDefault();
-        console.log(event.target.elements.username.value);
-        console.log(event.target.elements.password.value);
-      }}>
+      <form
+        onSubmit={async (event: any) => {
+          event.preventDefault();
+          const name: string = event.target.elements.username.value;
+          const password: string = event.target.elements.password.value;
+          await loginApi(name, password);
+        }}
+      >
         <div className="mb-6">
           <label className="form-label">Name</label>
           <input

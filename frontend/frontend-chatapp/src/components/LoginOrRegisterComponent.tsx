@@ -1,10 +1,15 @@
-import { useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import LoginFormComponent from "./LoginFormComponent";
 import RegisterFormComponent from "./RegisterFromComponent";
+import { User } from "../data/interfaces";
 
 type LoginStates = "Login" | "Register";
 
-function LoginOrRegisterComponent() {
+interface Props {
+  setUser: Dispatch<SetStateAction<User | null>>;
+}
+
+function LoginOrRegisterComponent({ setUser }: Props) {
   const [loginState, setLoginState] = useState<LoginStates>("Login");
 
   const SwitchStatus = () => {
@@ -16,9 +21,9 @@ function LoginOrRegisterComponent() {
   };
 
   if (loginState === "Login")
-    return <LoginFormComponent switchForm={SwitchStatus} />;
+    return <LoginFormComponent switchForm={SwitchStatus} setUser={setUser} />;
   else if (loginState === "Register") {
-    return <RegisterFormComponent switchForm={SwitchStatus} />;
+    return <RegisterFormComponent switchForm={SwitchStatus} setUser={setUser} />;
   }
 }
 

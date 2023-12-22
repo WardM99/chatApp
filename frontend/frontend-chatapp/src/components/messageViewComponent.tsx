@@ -32,7 +32,7 @@ function MessageViewComponent() {
           </p>
         }
         style={{
-          height: "400px",
+          height: "4px",
           overflowY: "auto",
           minHeight: "90vh",
           display: "flex",

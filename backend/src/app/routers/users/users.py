@@ -53,6 +53,10 @@ async def login(form_data: OAuth2PasswordRequestForm = Depends(),
         )
     )
 
+@user_router.get("", response_model=ReturnUser, status_code=status.HTTP_200_OK)
+async def get_current_user(user: User = Depends(require_user)):
+    """get current user"""
+    return user
 
 @user_router.get("/{user_id}",
                  dependencies=[Depends(require_user)],
