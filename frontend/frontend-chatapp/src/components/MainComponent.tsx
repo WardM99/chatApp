@@ -9,7 +9,7 @@ interface Props {
 
 function MainComponent({ user }: Props) {
   const [groupId, setGroupId] = useState<number>(-1);
-  console.log(groupId)
+  console.log(groupId);
   return (
     <div className="container-fluid">
       <div className="row">
