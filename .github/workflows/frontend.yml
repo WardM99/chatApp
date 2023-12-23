@@ -34,7 +34,7 @@ jobs:
   Lint:
     needs: [Dependencies]
     runs-on: ubuntu-latest
-    container: node:16.14.0-bullseye-slim
+    container: node:21.5.0-bullseye-slim
     steps:
       - uses: actions/checkout@v2
       - name: Get yarn cache directory path
@@ -52,7 +52,7 @@ jobs:
   Style:
     needs: [Dependencies]
     runs-on: ubuntu-latest
-    container: node:16.14.0-bullseye-slim
+    container: node:21.5.0-bullseye-slim
     steps:
       - uses: actions/checkout@v2
       - name: Get yarn cache directory path
