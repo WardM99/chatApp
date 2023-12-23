@@ -11,5 +11,5 @@ export interface User extends UserBasic {
 }
 
 export interface Users {
-    users: User[]
+  users: User[];
 }

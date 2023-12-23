@@ -8,15 +8,13 @@ interface Props {
 }
 
 function MainComponent({ user }: Props) {
-
-  const [groupId, setGroupId] = useState<Number>(-1)
-
-
+  const [groupId, setGroupId] = useState<number>(-1);
+  console.log(groupId)
   return (
     <div className="container-fluid">
       <div className="row">
         <div className="bg-dark col-auto col-md-2 min-vh-100">
-          <LeftSidebar user={user} setGroupId={setGroupId}/>
+          <LeftSidebar user={user} setGroupId={setGroupId} />
         </div>
         <div className="bg-dark col-md-10">
           <MessageViewComponent />

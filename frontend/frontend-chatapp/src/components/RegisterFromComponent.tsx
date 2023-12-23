@@ -21,7 +21,7 @@ function RegisterFormComponent({ switchForm, setUser }: Props) {
           event.preventDefault();
           const name: string = event.target.elements.username.value;
           const password: string = event.target.elements.password.value;
-          const passwordControl: String =
+          const passwordControl: string =
             event.target.elements.passwordControl.value;
           if (password === passwordControl) {
             await createUserApi(name, password);

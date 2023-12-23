@@ -1,4 +1,3 @@
-import axios from "axios";
 import { axiosInstance, getHeaders } from "./api";
 import { User } from "../../data/interfaces";
 import { setAccessToken, setTokenType } from "../local-storage.ts/auth";
@@ -16,7 +15,7 @@ function setLoginTokens(response: LoginResponse) {
 
 export async function createUser(
   name: string,
-  password: string
+  password: string,
 ): Promise<User | null> {
   const payload = {
     name,
@@ -34,7 +33,7 @@ export async function createUser(
 
 export async function login(
   name: string,
-  password: string
+  password: string,
 ): Promise<User | null> {
   const payload = new FormData();
   payload.append("username", name);

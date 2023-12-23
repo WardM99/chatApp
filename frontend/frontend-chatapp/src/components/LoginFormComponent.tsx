@@ -4,7 +4,7 @@ import { Dispatch, SetStateAction } from "react";
 
 interface Props {
   switchForm: () => void;
-  setUser: Dispatch<SetStateAction<User | null>>
+  setUser: Dispatch<SetStateAction<User | null>>;
 }
 
 function LoginFormComponent({ switchForm, setUser }: Props) {

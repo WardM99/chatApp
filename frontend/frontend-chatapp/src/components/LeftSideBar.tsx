@@ -11,7 +11,7 @@ import { Dispatch, SetStateAction } from "react";
 
 interface Props {
   user: User;
-  setGroupId: Dispatch<SetStateAction<Number>>;
+  setGroupId: Dispatch<SetStateAction<number>>;
 }
 
 function LeftSidebar({ user, setGroupId }: Props) {
@@ -20,8 +20,8 @@ function LeftSidebar({ user, setGroupId }: Props) {
   let hasMore = true;
   let i = 0;
   const fetchData = () => {
-    console.log("HELLO")
-    let data = items[i];
+    console.log("HELLO");
+    const data = items[i];
     console.log(data);
     i++;
     if (i >= items.length) hasMore = false;

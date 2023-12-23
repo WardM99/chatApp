@@ -1,6 +1,6 @@
 import InfiniteScroll from "react-infinite-scroll-component";
-import Form from "react-bootstrap/Form"
-import InputGroup from "react-bootstrap/InputGroup"
+import Form from "react-bootstrap/Form";
+import InputGroup from "react-bootstrap/InputGroup";
 import Button from "react-bootstrap/Button";
 import MessageComponent from "./MessageComponent";
 
@@ -13,7 +13,7 @@ function MessageViewComponent() {
   let hasMore = true;
   let i = 0;
   const fetchData = () => {
-    let data = items[i];
+    const data = items[i];
     console.log(data);
     i++;
     if (i >= items.length) hasMore = false;

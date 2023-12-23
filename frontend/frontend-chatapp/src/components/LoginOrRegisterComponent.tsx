@@ -23,7 +23,9 @@ function LoginOrRegisterComponent({ setUser }: Props) {
   if (loginState === "Login")
     return <LoginFormComponent switchForm={SwitchStatus} setUser={setUser} />;
   else if (loginState === "Register") {
-    return <RegisterFormComponent switchForm={SwitchStatus} setUser={setUser} />;
+    return (
+      <RegisterFormComponent switchForm={SwitchStatus} setUser={setUser} />
+    );
   }
 }
 
