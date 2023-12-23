@@ -6,7 +6,6 @@ import { currentUser, logout } from "./utils/api/user";
 
 function App() {
   const [user, setUser] = useState<User | null>(null);
-  logout();
   async function getUserApi() {
     const response: User | null = await currentUser();
     setUser(response);
@@ -14,7 +13,6 @@ function App() {
 
   useEffect(() => {
     const fetchData = async () => {
-      console.log("TEST")
       await getUserApi();
     };
     fetchData();
@@ -29,7 +27,7 @@ function App() {
 
   return (
     <>
-      <MainComponent />
+      <MainComponent user={user}/>
     </>
   );
 }

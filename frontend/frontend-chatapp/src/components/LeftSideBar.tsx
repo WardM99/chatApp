@@ -5,16 +5,22 @@ import GroupItemComponent from "./GroupItemComponent";
 import InfiniteScroll from "react-infinite-scroll-component";
 import UserCardComponent from "./UserCardComponent";
 import Button from "react-bootstrap/Button";
+import { User } from "../data/interfaces/user";
+import { GroupBasic } from "../data/interfaces/group";
+import { Dispatch, SetStateAction } from "react";
 
-function LeftSidebar() {
-  const items = [{ group_id: 0, name: "group0" }];
+interface Props {
+  user: User;
+  setGroupId: Dispatch<SetStateAction<Number>>;
+}
 
-  for (let i = 1; i <= 20; i++) {
-    items.push({ group_id: i, name: "group" + i });
-  }
+function LeftSidebar({ user, setGroupId }: Props) {
+  const items: GroupBasic[] = user.groups;
+
   let hasMore = true;
   let i = 0;
   const fetchData = () => {
+    console.log("HELLO")
     let data = items[i];
     console.log(data);
     i++;
@@ -26,7 +32,7 @@ function LeftSidebar() {
       <Container className="sidebar-container">
         <Nav variant="pills" className="flex-column">
           <InfiniteScroll
-            dataLength={items.length} //This is important field to render the next data
+            dataLength={1} //This is important field to render the next data
             next={fetchData}
             hasMore={hasMore}
             loader={<h4>Loading...</h4>}
@@ -42,14 +48,18 @@ function LeftSidebar() {
                 key={"GroupComponent" + group_id}
                 name={name}
                 group_id={group_id}
+                setGroupId={setGroupId}
               />
             ))}
-            <ButtonGroup aria-label="Basic example" className="btn-group d-flex" >
+            <ButtonGroup
+              aria-label="Basic example"
+              className="btn-group d-flex"
+            >
               <Button variant="outline-primary">Add Group</Button>
               <Button variant="outline-primary">Make Group</Button>
             </ButtonGroup>
           </InfiniteScroll>
-          <UserCardComponent name="Joske" status="Muziek luisteren" />
+          <UserCardComponent name={user.name} status={user.status} />
         </Nav>
       </Container>
     </>
