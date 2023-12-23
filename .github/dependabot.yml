@@ -6,3 +6,13 @@ updates:
     schedule:
       interval: "weekly"
       day: "wednesday"
+    commit-message:
+      prefix: ":arrow_up:"
+  - package-ecosystem: npm
+    directory: "/frontend/frontend-chatapp"
+    open-pull-requests-limit: 100
+    schedule:
+      interval: "weekly"
+      day: "wednesday"
+    commit-message:
+      prefix: ":arrow_up:"
