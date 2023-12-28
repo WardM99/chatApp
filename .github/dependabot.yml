@@ -6,7 +6,7 @@ updates:
     schedule:
       interval: "daily"
     commit-message:
-      prefix: :arrow_up:
+      prefix: ":arrow_up:"
   - package-ecosystem: "pip" # See documentation for possible values
     directory: "/backend" # Location of package manifests
     open-pull-requests-limit: 100
