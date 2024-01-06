@@ -34,7 +34,7 @@ function MessageViewComponent() {
         style={{
           height: "4px",
           overflowY: "auto",
-          minHeight: "90vh",
+          minHeight: "60vh",
           display: "flex",
           flexDirection: "column-reverse",
         }}
