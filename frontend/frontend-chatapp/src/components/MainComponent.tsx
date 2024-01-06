@@ -13,17 +13,17 @@ function MainComponent({ user }: Props) {
   console.log(groupId);
   return (
     <>
-    <NavBarComponent name={user.name} status={user.status}/>
-    <div className="container-fluid">
-      <div className="row">
-        <div className="bg-dark col-auto col-md-2 min-vh-100">
-          <LeftSidebar user={user} setGroupId={setGroupId} />
-        </div>
-        <div className="bg-dark col-md-10">
-          <MessageViewComponent />
+      <NavBarComponent name={user.name} status={user.status} />
+      <div className="container-fluid">
+        <div className="row">
+          <div className="bg-dark col-auto col-md-2 min-vh-100">
+            <LeftSidebar user={user} setGroupId={setGroupId} />
+          </div>
+          <div className="bg-dark col-md-10">
+            <MessageViewComponent />
+          </div>
         </div>
       </div>
-    </div>
     </>
   );
 }

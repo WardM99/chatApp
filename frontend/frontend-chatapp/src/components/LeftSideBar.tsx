@@ -42,7 +42,7 @@ function LeftSidebar({ user, setGroupId }: Props) {
               position: "absolute",
               height: "100%",
               overflow: "auto",
-              overflowY: "scroll"
+              overflowY: "scroll",
             }}
           >
             {items.map(({ name, group_id }) => (
