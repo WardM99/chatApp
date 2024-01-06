@@ -16,12 +16,12 @@ jobs:
     runs-on: ubuntu-latest
     container: node:21.5.0-bullseye-slim
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
       - name: Get yarn cache directory path
         id: yarn-cache-dir
         run: echo "::set-output name=dir::$(yarn cache dir)"
 
-      - uses: actions/cache@v2
+      - uses: actions/cache@v3
         id: cache
         with:
           path: ${{ steps.yarn-cache-dir.outputs.dir }}
@@ -36,12 +36,12 @@ jobs:
     runs-on: ubuntu-latest
     container: node:21.5.0-bullseye-slim
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
       - name: Get yarn cache directory path
         id: yarn-cache-dir
         run: echo "::set-output name=dir::$(yarn cache dir)"
 
-      - uses: actions/cache@v2
+      - uses: actions/cache@v3
         with:
           path: ${{ steps.yarn-cache-dir.outputs.dir }}
           key: ${{ runner.os }}-yarn-cache-${{ hashFiles('**/yarn.lock', '**/package.json') }}
@@ -54,12 +54,12 @@ jobs:
     runs-on: ubuntu-latest
     container: node:21.5.0-bullseye-slim
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
       - name: Get yarn cache directory path
         id: yarn-cache-dir
         run: echo "::set-output name=dir::$(yarn cache dir)"
 
-      - uses: actions/cache@v2
+      - uses: actions/cache@v3
         with:
           path: ${{ steps.yarn-cache-dir.outputs.dir }}
           key: ${{ runner.os }}-yarn-cache-${{ hashFiles('**/yarn.lock', '**/package.json') }}
