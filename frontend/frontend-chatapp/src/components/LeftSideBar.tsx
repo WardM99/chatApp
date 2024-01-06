@@ -1,10 +1,7 @@
 import Nav from "react-bootstrap/Nav";
-import ButtonGroup from "react-bootstrap/ButtonGroup";
 import { Container } from "react-bootstrap";
 import GroupItemComponent from "./GroupItemComponent";
 import InfiniteScroll from "react-infinite-scroll-component";
-import UserCardComponent from "./UserCardComponent";
-import Button from "react-bootstrap/Button";
 import { User } from "../data/interfaces/user";
 import { GroupBasic } from "../data/interfaces/group";
 import { Dispatch, SetStateAction } from "react";
@@ -41,7 +38,12 @@ function LeftSidebar({ user, setGroupId }: Props) {
                 <b>Yay! You have seen it all</b>
               </p>
             }
-            style={{ height: "400px", overflowY: "auto", minHeight: "90vh" }}
+            style={{
+              position: "absolute",
+              height: "100%",
+              overflow: "auto",
+              overflowY: "scroll"
+            }}
           >
             {items.map(({ name, group_id }) => (
               <GroupItemComponent
@@ -51,15 +53,7 @@ function LeftSidebar({ user, setGroupId }: Props) {
                 setGroupId={setGroupId}
               />
             ))}
-            <ButtonGroup
-              aria-label="Basic example"
-              className="btn-group d-flex"
-            >
-              <Button variant="outline-primary">Add Group</Button>
-              <Button variant="outline-primary">Make Group</Button>
-            </ButtonGroup>
           </InfiniteScroll>
-          <UserCardComponent name={user.name} status={user.status} />
         </Nav>
       </Container>
     </>
