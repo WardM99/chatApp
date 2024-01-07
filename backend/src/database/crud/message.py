@@ -22,13 +22,18 @@ async def get_message_by_id(
 async def get_messages_by_user_in_group(
         database: AsyncSession,
         user: User,
-        group: Group
+        group: Group,
+        page: int = 1
 ) -> List[Message]:
     """Get all message by a user"""
+    if page <= 0:
+        raise ValueError("Page has to be strict positive")
     statemet = select(Message)\
         .where(Message.sender_id == user.user_id)\
         .where(Message.group_id == group.group_id)\
-        .order_by(desc(col(Message.message_id)))
+        .order_by(desc(col(Message.message_id)))\
+        .offset((page-1)*PAGE_SIZE)\
+        .limit(PAGE_SIZE)
     results = await database.exec(statemet)
     return list(results.all())
 
