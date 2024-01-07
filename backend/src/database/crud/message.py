@@ -6,6 +6,8 @@ from sqlmodel import select, col, desc
 
 from src.database.models import User, Message, Group
 
+from src.settings import PAGE_SIZE
+
 async def get_message_by_id(
         database: AsyncSession,
         message_id: int
@@ -31,11 +33,19 @@ async def get_messages_by_user_in_group(
     return list(results.all())
 
 
-async def get_messages_by_group(database: AsyncSession, group: Group) -> List[Message]:
+async def get_messages_by_group(
+        database: AsyncSession,
+        group: Group,
+        page: int = 1
+) -> List[Message]:
     """Get all messages in a group"""
+    if page <= 0:
+        raise ValueError("Page has to be strict positive")
     statement = select(Message)\
         .where(Message.group_id == group.group_id)\
-        .order_by(desc(col(Message.message_id)))
+        .order_by(desc(col(Message.message_id)))\
+        .offset((page-1)*PAGE_SIZE)\
+        .limit(PAGE_SIZE)
     results = await database.exec(statement)
     return list(results.all())
 
