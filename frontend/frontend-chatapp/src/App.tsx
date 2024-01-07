@@ -1,6 +1,4 @@
 import { useEffect, useState } from "react";
-import LoginOrRegisterComponent from "./components/LoginOrRegisterComponent";
-import MainComponent from "./components/MainComponent";
 import { User } from "./data/interfaces";
 import { currentUser } from "./utils/api/user";
 
@@ -21,13 +19,11 @@ function App() {
   if (user === null)
     return (
       <>
-        <LoginOrRegisterComponent setUser={setUser} />
       </>
     );
 
   return (
     <>
-      <MainComponent user={user} />
     </>
   );
 }
