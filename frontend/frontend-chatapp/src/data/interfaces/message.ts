@@ -7,7 +7,7 @@ export interface MessageBasic {
   sender: UserBasic;
 }
 
-export interface Message {
+export interface Message extends MessageBasic {
   group_id: number;
   group: GroupBasic;
   reply_id: number | null;
