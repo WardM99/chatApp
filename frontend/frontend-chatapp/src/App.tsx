@@ -16,16 +16,9 @@ function App() {
     fetchData();
   }, []);
 
-  if (user === null)
-    return (
-      <>
-      </>
-    );
+  if (user === null) return <></>;
 
-  return (
-    <>
-    </>
-  );
+  return <></>;
 }
 
 export default App;
