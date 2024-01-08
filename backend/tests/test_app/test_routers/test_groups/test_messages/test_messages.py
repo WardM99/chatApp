@@ -4,8 +4,11 @@ from starlette import status
 
 from src.database.crud.user import make_user
 from src.database.crud.group import make_group
+from src.database.crud.message import make_message
 from src.database.models import User, Group
 from tests.utils.authorization.auth_client import AuthClient
+
+from src.settings import PAGE_SIZE
 
 async def test_make_message(database_session: AsyncSession, auth_client: AuthClient):
     user: User = await make_user(database_session, "User1", "pw1")
@@ -245,3 +248,67 @@ async def test_delete_message_not_logged_in(database_session: AsyncSession, auth
     assert get_request.status_code == status.HTTP_200_OK
     data = get_request.json()
     assert len(data["messages"]) == 1
+
+
+async def test_messages_pagination(database_session: AsyncSession, auth_client: AuthClient):
+    user1: User = await make_user(database_session, "Owner", "pw1")
+    auth_client.login(user1)
+    group1: Group = await make_group(database_session, user1, "Group1")
+    for i in range(PAGE_SIZE+(PAGE_SIZE-1)):
+        await make_message(database_session, user1, group1, f"Message{i}")
+    get_request = await auth_client.get(f"/groups/{group1.group_id}/messages")
+    assert get_request.status_code == status.HTTP_200_OK
+    data = get_request.json()
+    assert len(data["messages"]) == PAGE_SIZE
+    get_request = await auth_client.get(f"/groups/{group1.group_id}/messages?page=2")
+    assert get_request.status_code == status.HTTP_200_OK
+    data = get_request.json()
+    assert len(data["messages"]) == PAGE_SIZE-1
+    get_request = await auth_client.get(f"/groups/{group1.group_id}/messages?page=3")
+    assert get_request.status_code == status.HTTP_200_OK
+    data = get_request.json()
+    assert len(data["messages"]) == 0
+
+
+async def test_messages_pagination_wrong_page(database_session: AsyncSession, auth_client: AuthClient):
+    user1: User = await make_user(database_session, "Owner", "pw1")
+    auth_client.login(user1)
+    group1: Group = await make_group(database_session, user1, "Group1")
+    for i in range(PAGE_SIZE+(PAGE_SIZE-1)):
+        await make_message(database_session, user1, group1, f"Message{i}")
+    get_request = await auth_client.get(f"/groups/{group1.group_id}/messages?page=0")
+    assert get_request.status_code == status.HTTP_400_BAD_REQUEST
+    get_request = await auth_client.get(f"/groups/{group1.group_id}/messages?page=-1")
+    assert get_request.status_code == status.HTTP_400_BAD_REQUEST
+
+
+async def test_messages_by_user_pagination(database_session: AsyncSession, auth_client: AuthClient):
+    user1: User = await make_user(database_session, "Owner", "pw1")
+    auth_client.login(user1)
+    group1: Group = await make_group(database_session, user1, "Group1")
+    for i in range(PAGE_SIZE+(PAGE_SIZE-1)):
+        await make_message(database_session, user1, group1, f"Message{i}")
+    get_request = await auth_client.get(f"/groups/{group1.group_id}/messages/{user1.name}")
+    assert get_request.status_code == status.HTTP_200_OK
+    data = get_request.json()
+    assert len(data["messages"]) == PAGE_SIZE
+    get_request = await auth_client.get(f"/groups/{group1.group_id}/messages/{user1.name}?page=2")
+    assert get_request.status_code == status.HTTP_200_OK
+    data = get_request.json()
+    assert len(data["messages"]) == PAGE_SIZE-1
+    get_request = await auth_client.get(f"/groups/{group1.group_id}/messages/{user1.name}?page=3")
+    assert get_request.status_code == status.HTTP_200_OK
+    data = get_request.json()
+    assert len(data["messages"]) == 0
+
+
+async def test_messages_pagination_by_user_wrong_page(database_session: AsyncSession, auth_client: AuthClient):
+    user1: User = await make_user(database_session, "Owner", "pw1")
+    auth_client.login(user1)
+    group1: Group = await make_group(database_session, user1, "Group1")
+    for i in range(PAGE_SIZE+(PAGE_SIZE-1)):
+        await make_message(database_session, user1, group1, f"Message{i}")
+    get_request = await auth_client.get(f"/groups/{group1.group_id}/messages/{user1.name}?page=0")
+    assert get_request.status_code == status.HTTP_400_BAD_REQUEST
+    get_request = await auth_client.get(f"/groups/{group1.group_id}/messages/{user1.name}?page=-1")
+    assert get_request.status_code == status.HTTP_400_BAD_REQUEST
