@@ -17,6 +17,7 @@ from src.database.crud.user import make_user
 from src.database.crud.group import make_group
 from src.database.crud.message import make_message
 from src.database.models import User, Group, Message
+from src.settings import PAGE_SIZE
 
 async def test_logic_make_message(database_session: AsyncSession):
     user: User = await make_user(database_session, "user1", "pw1")
@@ -120,3 +121,51 @@ async def test_delete_message_wrong_user(database_session: AsyncSession):
         await logic_delete_message(database_session, message1, user2)
     messages = await logic_get_messages_by_group(database_session, group1)
     assert len(messages.messages) == 2
+
+
+async def test_messages_pagination(database_session: AsyncSession):
+    user1: User = await make_user(database_session, "Owner", "pw1")
+    group1: Group = await make_group(database_session, user1, "Group1")
+    for i in range(PAGE_SIZE+(PAGE_SIZE-1)):
+        await make_message(database_session, user1, group1, f"Message{i}")
+    messages: ReturnMessages = await logic_get_messages_by_group(database_session, group1)
+    assert len(messages.messages) == PAGE_SIZE
+    messages = await logic_get_messages_by_group(database_session, group1, page=2)
+    assert len(messages.messages) == (PAGE_SIZE-1)
+    messages = await logic_get_messages_by_group(database_session, group1, page=3)
+    assert len(messages.messages) == 0
+
+
+async def test_messages_pagination_wrong_page(database_session: AsyncSession):
+    user1: User = await make_user(database_session, "Owner", "pw1")
+    group1: Group = await make_group(database_session, user1, "Group1")
+    for i in range(PAGE_SIZE):
+        await make_message(database_session, user1, group1, f"Message{i}")
+    with pytest.raises(ValueError):
+        await logic_get_messages_by_group(database_session, group1, page=0)
+    with pytest.raises(ValueError):
+        await logic_get_messages_by_group(database_session, group1, page=-1)
+
+
+async def test_messages_by_user_pagination(database_session: AsyncSession):
+    user1: User = await make_user(database_session, "Owner", "pw1")
+    group1: Group = await make_group(database_session, user1, "Group1")
+    for i in range(PAGE_SIZE+(PAGE_SIZE-1)):
+        await make_message(database_session, user1, group1, f"Message{i}")
+    messages: ReturnMessages = await logic_get_messages_by_user_in_group(database_session, user1, group1)
+    assert len(messages.messages) == PAGE_SIZE
+    messages = await logic_get_messages_by_user_in_group(database_session, user1, group1, page=2)
+    assert len(messages.messages) == (PAGE_SIZE-1)
+    messages = await logic_get_messages_by_user_in_group(database_session, user1, group1, page=3)
+    assert len(messages.messages) == 0
+
+
+async def test_messages_pagination_by_user_wrong_page(database_session: AsyncSession):
+    user1: User = await make_user(database_session, "Owner", "pw1")
+    group1: Group = await make_group(database_session, user1, "Group1")
+    for i in range(PAGE_SIZE):
+        await make_message(database_session, user1, group1, f"Message{i}")
+    with pytest.raises(ValueError):
+        await logic_get_messages_by_user_in_group(database_session, user1, group1, page=0)
+    with pytest.raises(ValueError):
+        await logic_get_messages_by_user_in_group(database_session, user1, group1, page=-1)
