@@ -58,11 +58,12 @@ async def logic_make_message(
 async def logic_get_messages_by_user_in_group(
         database: AsyncSession = Depends(get_session),
         user: User = Depends(logic_get_user_by_name),
-        group: Group = Depends(logic_get_group_by_id)
+        group: Group = Depends(logic_get_group_by_id),
+        page: int = 1
 ) -> ReturnMessages:
     """Logic to get all messages send by a user in a group"""
     messages_by_user_in_group: List[Message] =\
-        await get_messages_by_user_in_group(database, user, group)
+        await get_messages_by_user_in_group(database, user, group, page=page)
     return_messages: List[ReturnMessage] = []
     for m in messages_by_user_in_group:
         return_messages.append(
@@ -72,10 +73,11 @@ async def logic_get_messages_by_user_in_group(
 
 async def logic_get_messages_by_group(
         database: AsyncSession = Depends(get_session),
-        group: Group = Depends(logic_get_group_by_id)
+        group: Group = Depends(logic_get_group_by_id),
+        page: int = 1
 ) -> ReturnMessages:
     """Logic to get all messages in a group"""
-    messages_in_group: List[Message] = await get_messages_by_group(database, group)
+    messages_in_group: List[Message] = await get_messages_by_group(database, group, page=page)
     return_messages: List[ReturnMessage] = []
     for m in messages_in_group:
         return_messages.append(

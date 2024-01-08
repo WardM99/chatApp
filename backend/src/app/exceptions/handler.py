@@ -76,6 +76,14 @@ def install_handlers(app: FastAPI): # pragma: no cover
         )
 
 
+    @app.exception_handler(ValueError)
+    def value_error(_request, _exception: ValueError):
+        return JSONResponse(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            content={"message": str(_exception)}
+        )
+
+
     @app.exception_handler(Exception)
     def something_wrong(_request: Request, _exception: Exception):
         return JSONResponse(
