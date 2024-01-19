@@ -38,6 +38,7 @@ class Group(SQLModel, table=True):
     """Model Group"""
     group_id: Optional[int] = Field(default=None, primary_key=True)
     name: str = Field(nullable=False, unique=True)
+    private: bool = Field(default=False)
     owner_id: Optional[int] = Field(foreign_key="user.user_id", index=True)
 
     owner: User = Relationship(
