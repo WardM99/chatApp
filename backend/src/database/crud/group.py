@@ -13,7 +13,12 @@ async def get_group_by_id(database: AsyncSession, group_id: Optional[int]) -> Gr
     return results.one()
 
 
-async def make_group(database: AsyncSession, owner: User, name: str, private: bool = False) -> Group:
+async def make_group(
+    database: AsyncSession,
+    owner: User,
+    name: str,
+    private: bool = False
+) -> Group:
     """Make a group"""
     group: Group = Group(name=name, owner_id=owner.user_id, private=private)
     group.users.append(owner)

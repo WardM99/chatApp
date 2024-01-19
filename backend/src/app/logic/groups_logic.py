@@ -20,7 +20,12 @@ from src.database.crud.user import get_user_by_name
 from src.database.database import get_session
 from src.database.models import User, Group
 
-async def logic_make_new_group(database: AsyncSession, owner: User, name: str, private: bool = False) -> Group:
+async def logic_make_new_group(
+    database: AsyncSession,
+    owner: User,
+    name: str,
+    private: bool = False
+) -> Group:
     """Logic to make a new group"""
     return await make_group(database, owner, name, private=private)
 
