@@ -26,6 +26,7 @@ async def test_logic_make_new_group(database_session: AsyncSession):
     assert group.name == "GR1"
     assert len(group.users) == 1
     assert group.users[0] == owner
+    assert group.private is False
 
 
 async def test_logic_get_group_by_id(database_session: AsyncSession):
@@ -175,3 +176,31 @@ async def test_logic_user_not_in_group(database_session: AsyncSession):
     await logic_add_user(database_session, user2, new_group)
     user: User = await logic_user_in_group(user2, new_group)
     assert user == user2
+
+
+async def test_logic_make_new_group_private(database_session: AsyncSession):
+    owner: User = await make_user(database_session, "Jos", "PW1")
+    group: Group = await logic_make_new_group(database_session, owner, "GR1", private=True)
+    assert group.name == "GR1"
+    assert len(group.users) == 1
+    assert group.users[0] == owner
+    assert group.private
+
+
+async def test_logic_make_new_group_public(database_session: AsyncSession):
+    owner: User = await make_user(database_session, "Jos", "PW1")
+    group: Group = await logic_make_new_group(database_session, owner, "GR1", private=False)
+    assert group.name == "GR1"
+    assert len(group.users) == 1
+    assert group.users[0] == owner
+    assert group.private is False
+
+
+async def test_logic_add_user_private(database_session: AsyncSession):
+    owner: User = await make_user(database_session, "Jos", "PW1")
+    new_group: Group = await logic_make_new_group(database_session, owner, "GR1", private=True)
+    user2: User = await make_user(database_session, "TestUser", "PW5")
+    with pytest.raises(WrongUserException):
+        await logic_add_user(database_session, user2, new_group)
+    await logic_add_user_by_name(database_session, owner, new_group, user2.name)
+    assert len(new_group.users) == 2

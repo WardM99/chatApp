@@ -23,6 +23,27 @@ async def test_make_group(database_session: AsyncSession):
     assert new_group.name == "Group1"
     assert len(new_group.users) == 1
     assert new_group.users[0] == owner
+    assert new_group.private is False
+
+
+async def test_make_group_private(database_session: AsyncSession):
+    owner: User = await make_user(database_session, "Owner", "pw1")
+    new_group: Group = await make_group(database_session, owner, "Group1", private=True)
+    assert new_group.owner_id == owner.user_id
+    assert new_group.name == "Group1"
+    assert len(new_group.users) == 1
+    assert new_group.users[0] == owner
+    assert new_group.private
+
+
+async def test_make_group_public(database_session: AsyncSession):
+    owner: User = await make_user(database_session, "Owner", "pw1")
+    new_group: Group = await make_group(database_session, owner, "Group1", private=False)
+    assert new_group.owner_id == owner.user_id
+    assert new_group.name == "Group1"
+    assert len(new_group.users) == 1
+    assert new_group.users[0] == owner
+    assert new_group.private is False
 
 
 async def test_get_group_by_id(database_session: AsyncSession):
@@ -36,7 +57,7 @@ async def test_get_group_by_id_dont_exist(database_session: AsyncSession):
     owner: User = await make_user(database_session, "Owner", "pw1")
     new_group: Group = await make_group(database_session, owner, "Group1")
     with pytest.raises(NoResultFound):
-        group: Group = await get_group_by_id(database_session, new_group.group_id+1)
+        await get_group_by_id(database_session, new_group.group_id+1)
 
 
 async def test_edit_group_name(database_session: AsyncSession):
