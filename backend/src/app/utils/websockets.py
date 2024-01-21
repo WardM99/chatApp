@@ -1,6 +1,7 @@
 """Websockets"""
 from asyncio import Queue as AsyncQueue, Lock
 from collections import defaultdict
+from typing import Optional
 from queue import Queue
 
 from fastapi import Depends, Request, Response, FastAPI
@@ -54,7 +55,7 @@ class DataPublisher:
                 await queue.put(data)
 
 # Map containing a publisher for each group
-_publisher_by_group: dict[int, DataPublisher] = defaultdict(DataPublisher)
+_publisher_by_group: dict[Optional[int], DataPublisher] = defaultdict(DataPublisher)
 
 async def get_publisher(group: Group = Depends(logic_get_group_by_id)):
     """Get a publisher for the given group"""

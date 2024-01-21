@@ -32,6 +32,9 @@ mypy = "^1.7"
 pytest-asyncio = "^0.23.2"
 coverage = "^7.3.3"
 
+[tool.pylint.main]
+min-public-methods=1
+
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
