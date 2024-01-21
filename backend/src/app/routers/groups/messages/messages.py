@@ -17,6 +17,7 @@ from src.app.logic.messages_logic import(
     logic_get_message_by_id
 )
 from src.app.logic.groups_logic import logic_get_group_by_id, logic_user_in_group
+from src.app.utils.websockets import live
 from src.database.database import get_session
 from src.database.models import User, Group, Message
 
@@ -27,6 +28,7 @@ message_router = APIRouter(prefix="/messages")
     "",
     status_code=status.HTTP_201_CREATED,
     response_model=ReturnMessage,
+    dependencies=[Depends(live)]
 )
 async def write_message(
     message: WriteMessage,
@@ -42,7 +44,7 @@ async def write_message(
     "",
     status_code=status.HTTP_200_OK,
     response_model=ReturnMessages,
-    dependencies=[Depends(logic_user_in_group)]
+    dependencies=[Depends(logic_user_in_group), Depends(live)]
 )
 async def get_messages_in_group(
     messages: ReturnMessages = Depends(logic_get_messages_by_group)
@@ -55,7 +57,7 @@ async def get_messages_in_group(
     "/{user_name}",
     status_code=status.HTTP_200_OK,
     response_model=ReturnMessages,
-    dependencies=[Depends(logic_user_in_group)]
+    dependencies=[Depends(logic_user_in_group), Depends(live)]
 )
 async def get_messages_in_group_by_name(
     messages: ReturnMessages = Depends(logic_get_messages_by_user_in_group)
@@ -66,7 +68,8 @@ async def get_messages_in_group_by_name(
 
 @message_router.put(
     "/{message_id}",
-    status_code=status.HTTP_204_NO_CONTENT
+    status_code=status.HTTP_204_NO_CONTENT,
+    dependencies=[Depends(live)]
 )
 async def change_message(
     new_message: WriteMessage,
@@ -80,7 +83,8 @@ async def change_message(
 
 @message_router.delete(
     "/{message_id}",
-    status_code=status.HTTP_204_NO_CONTENT
+    status_code=status.HTTP_204_NO_CONTENT,
+    dependencies=[Depends(live)]
 )
 async def delete_message(
     database: AsyncSession = Depends(get_session),

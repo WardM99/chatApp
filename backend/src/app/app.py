@@ -6,6 +6,7 @@ from starlette.middleware.cors import CORSMiddleware
 from sqlmodel import SQLModel
 from src.app.exceptions.handler import install_handlers
 from src.app.routers import user_router, group_router
+from src.app.utils.websockets import install_middleware
 from src.database.database import engine
 
 @asynccontextmanager
@@ -37,6 +38,7 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+install_middleware(app)
 
 
 install_handlers(app)
