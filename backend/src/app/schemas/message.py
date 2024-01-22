@@ -6,7 +6,7 @@ from src.app.schemas.group import ReturnUserBasic, ReturnGroupBasic
 class WriteMessage(SQLModel):
     """Schema to write a message"""
     message: str
-    reply_id: Optional[int]
+    reply_id: Optional[int] = None
 
 
 class ReturnMessageBasic(SQLModel):
@@ -21,7 +21,7 @@ class ReturnMessage(ReturnMessageBasic):
     """Schema to return a message"""
     group_id: int
     group: ReturnGroupBasic
-    reply_id: Optional[int]
+    reply_id: Optional[int] = None
     reply: Optional[ReturnMessageBasic] = None
 
 

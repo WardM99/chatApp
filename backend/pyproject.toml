@@ -22,6 +22,8 @@ types-python-jose = "^3.3.4.8"
 aiohttp = "^3.9.1"
 httpx = "^0.26.0"
 requests = "^2.31.0"
+websockets = "^12.0"
+pyhumps = "^3.8.0"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^7.4.3"
@@ -29,6 +31,9 @@ pylint = "^3.0.2"
 mypy = "^1.7"
 pytest-asyncio = "^0.23.2"
 coverage = "^7.3.3"
+
+[tool.pylint.main]
+min-public-methods=1
 
 [build-system]
 requires = ["poetry-core"]
