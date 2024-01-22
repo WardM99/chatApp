@@ -132,7 +132,7 @@ async def remove_user_as_owner(
     user: User = Depends(require_user),
     group: Group = Depends(logic_get_group_by_id)
 ):
-    """remove a user from a group"""
+    """remove a user from a group as an owner"""
     await logic_remove_user(database, user, group, user_remove.user_id)
 
 
@@ -167,7 +167,6 @@ async def add_user_by_name(
 
 @group_router.websocket(
     "/{group_id}/live"
-    ,dependencies=[Depends(require_user)]
 )
 async def feed(
     websocket: WebSocket,

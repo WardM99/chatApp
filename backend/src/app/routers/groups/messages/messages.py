@@ -44,7 +44,7 @@ async def write_message(
     "",
     status_code=status.HTTP_200_OK,
     response_model=ReturnMessages,
-    dependencies=[Depends(logic_user_in_group), Depends(live)]
+    dependencies=[Depends(logic_user_in_group)]
 )
 async def get_messages_in_group(
     messages: ReturnMessages = Depends(logic_get_messages_by_group)
@@ -57,7 +57,7 @@ async def get_messages_in_group(
     "/{user_name}",
     status_code=status.HTTP_200_OK,
     response_model=ReturnMessages,
-    dependencies=[Depends(logic_user_in_group), Depends(live)]
+    dependencies=[Depends(logic_user_in_group)]
 )
 async def get_messages_in_group_by_name(
     messages: ReturnMessages = Depends(logic_get_messages_by_user_in_group)

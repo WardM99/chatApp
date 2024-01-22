@@ -63,7 +63,8 @@ async def get_publisher(group: Group = Depends(logic_get_group_by_id)):
 
 
 async def live(request: Request, publisher: DataPublisher = Depends(get_publisher)):
-    """Add the publisher for the current edition to the queue
+    """
+    Add the publisher for the current group to the queue
     Indicates to the middleware the event might trigger a live data event
     """
     queue: Queue = request.state.websocket_publisher_queue
@@ -82,7 +83,7 @@ def install_middleware(app: FastAPI):
         if 200 <= response.status_code < 300 and not queue.empty():
             if (publisher := queue.get_nowait()) is not None:
                 path_ids: dict = request.path_params.copy()
-                del path_ids['group_id']
+                #del path_ids['group_id']
                 live_event: LiveEventParameters = LiveEventParameters(
                     request.method,
                     path_ids
