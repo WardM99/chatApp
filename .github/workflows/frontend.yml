@@ -9,7 +9,7 @@ on:
 
 defaults:
   run:
-    working-directory: frontend/frontend-chatapp
+    working-directory: frontend/chatapp
 
 jobs:
   Dependencies:
