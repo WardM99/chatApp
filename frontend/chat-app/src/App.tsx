@@ -1,9 +1,9 @@
-import './App.css'
+import "./App.css";
 import { useEffect, useState } from "react";
 import { User } from "./data/interfaces";
 import { currentUser } from "./utils/api/user";
-import { Login } from './components/Login';
-import { MainView } from './components/MainView';
+import { Login } from "./components/Login";
+import { MainView } from "./components/MainView";
 
 function App() {
   const [user, setUser] = useState<User | null>(null);

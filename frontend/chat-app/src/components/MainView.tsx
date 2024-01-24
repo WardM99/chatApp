@@ -19,7 +19,7 @@ interface Props {
 
 const items: string[] = [];
 
-for (let i = 0; i < 100; i++) {
+for (let i = 0; i < 5; i++) {
   items.push("message" + i);
 }
 
@@ -28,8 +28,9 @@ export function MainView({ user, setUser }: Props) {
     logout();
     setUser(null);
   }
+
   return (
-    <div className="w-4/5 px-[3%] flex flex-col flex-grow h-full">
+    <div className="flex flex-col h-screen">
       <Menubar>
         <MenubarMenu>
           <MenubarTrigger>{user.name}</MenubarTrigger>
@@ -38,16 +39,18 @@ export function MainView({ user, setUser }: Props) {
           </MenubarContent>
         </MenubarMenu>
       </Menubar>
-      <div className="flex flex-grow py-4 gap-x-4 items-start">
-        <ScrollArea className="w-3/5 flex flex-col gap-y-4 overflow-y-auto">
-          {items.map((s) => {
-            return <div>{s}</div>;
-          })}
+
+      <div className="flex flex-col flex-grow max-h-screen overflow-hidden">
+        <ScrollArea className="flex-grow overflow-y-auto">
+          {items.map((s, index) => (
+            <div key={index}>{s}</div>
+          ))}
         </ScrollArea>
-      </div>
-      <div className="flex w-full items-center space-x-2">
-        <Input type="text" placeholder="Send message to group" />
-        <Button type="submit">Send</Button>
+
+        <div className="flex items-center space-x-2">
+          <Input type="text" placeholder="Send message to group" />
+          <Button type="submit">Send</Button>
+        </div>
       </div>
     </div>
   );
