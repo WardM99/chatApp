@@ -81,6 +81,6 @@ jobs:
           python -m coverage xml
       - run: apt update && apt install -y git
       - name: Code Coverage
-        uses: codecov/codecov-action@v3
+        uses: codecov/codecov-action@v4
         with:
           token: ${{ secrets.CODECOV }}
