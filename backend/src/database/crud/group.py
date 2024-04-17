@@ -20,6 +20,8 @@ async def make_group(
     private: bool = False
 ) -> Group:
     """Make a group"""
+    if len(name) <= 0:
+        raise ValueError("Group name can't be empty")
     group: Group = Group(name=name, owner_id=owner.user_id, private=private)
     group.users.append(owner)
     database.add(group)
@@ -29,6 +31,8 @@ async def make_group(
 
 async def edit_group_name(database: AsyncSession, group:Group, new_name: str) -> Group:
     """Edit the name of the group"""
+    if len(new_name) <= 0:
+        raise ValueError("Group name can't be empty")
     group.name = new_name
     database.add(group)
     await database.commit()

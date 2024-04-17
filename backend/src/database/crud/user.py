@@ -15,6 +15,12 @@ async def get_user_by_id(database: AsyncSession, user_id: Optional[int]) -> User
 
 async def make_user(database: AsyncSession, name: str, password: str) -> User:
     """Make a new user"""
+    if len(password) <= 0:
+        raise ValueError("Password can't be empty")
+
+    if len(name) <= 0:
+        raise ValueError("Name can't be empty")
+
     user: User = User(name=name, password=password, groups=[])
     database.add(user)
     await database.commit()
@@ -31,6 +37,8 @@ async def change_status(database: AsyncSession, user: User, new_status: Optional
 
 async def edit_user_password(database: AsyncSession, user: User, new_password: str) -> User:
     """Update a user's password"""
+    if len(new_password) <= 0:
+        raise ValueError("Password can't be empty")
     user.password = new_password
     database.add(user)
     await database.commit()
@@ -39,6 +47,8 @@ async def edit_user_password(database: AsyncSession, user: User, new_password: s
 
 async def edit_user_name(database: AsyncSession, user: User, new_name: str) -> User:
     """Update a user's name"""
+    if len(new_name) <= 0:
+        raise ValueError("Name can't be empty")
     user.name = new_name
     database.add(user)
     await database.commit()

@@ -23,6 +23,18 @@ async def test_make_user(database_session: AsyncSession):
     assert new_user.status is None
 
 
+async def test_make_user_empty_password(database_session: AsyncSession):
+    """Test to make a user with empty password"""
+    with pytest.raises(ValueError):
+        await make_user(database_session, "Joske", "")
+
+
+async def test_make_user_empty_name(database_session: AsyncSession):
+    """Test to make a user with empty name"""
+    with pytest.raises(ValueError):
+        await make_user(database_session, "", "PW1")
+
+
 async def test_make_user_dublicate(database_session: AsyncSession):
     """Test to make and get a dublicate user"""
     await make_user(database_session, "Joske", "PW1")
@@ -53,10 +65,22 @@ async def test_update_password(database_session: AsyncSession):
     assert edit_user.password == "PW2"
 
 
+async def test_update_password_to_empty_password(database_session: AsyncSession):
+    new_user: User = await make_user(database_session, "Joske", "PW1")
+    with pytest.raises(ValueError):
+        await edit_user_password(database_session, new_user, "")
+
+
 async def test_update_name(database_session: AsyncSession):
     new_user: User = await make_user(database_session, "Hoske", "PW1")
     edit_user: User = await edit_user_name(database_session, new_user, "Joske")
     assert edit_user.name == "Joske"
+
+
+async def test_update_name_to_empty_name(database_session: AsyncSession):
+    new_user: User = await make_user(database_session, "Joske", "PW1")
+    with pytest.raises(ValueError):
+        await edit_user_name(database_session, new_user, "")
 
 
 async def test_get_user_by_name(database_session: AsyncSession):

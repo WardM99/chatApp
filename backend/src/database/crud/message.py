@@ -63,6 +63,8 @@ async def make_message(
     reply_id: Optional[int] = None
 ) -> Message:
     """Make a new message"""
+    if len(message) <= 0:
+        raise ValueError("The message can't be empty")
     new_message: Message = Message(
         message=message,
         sender_id=sender.user_id,
@@ -76,6 +78,8 @@ async def make_message(
 
 async def edit_message(database: AsyncSession, message: Message, new_message: str) -> Message:
     """Edit the message"""
+    if len(new_message) <= 0:
+        raise ValueError("The message can't be empty")
     message.message = new_message
     database.add(message)
     await database.commit()
