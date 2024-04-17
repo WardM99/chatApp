@@ -23,6 +23,18 @@ async def test_make_user(database_session: AsyncSession):
     assert new_user.status is None
 
 
+async def test_make_user_empty_password(database_session: AsyncSession):
+    """Test to make a user with empty password"""
+    with pytest.raises(ValueError):
+        await make_user(database_session, "Joske", "")
+
+
+async def test_make_user_empty_name(database_session: AsyncSession):
+    """Test to make a user with empty name"""
+    with pytest.raises(ValueError):
+        await make_user(database_session, "", "PW1")
+
+
 async def test_make_user_dublicate(database_session: AsyncSession):
     """Test to make and get a dublicate user"""
     await make_user(database_session, "Joske", "PW1")

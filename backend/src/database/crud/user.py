@@ -15,6 +15,12 @@ async def get_user_by_id(database: AsyncSession, user_id: Optional[int]) -> User
 
 async def make_user(database: AsyncSession, name: str, password: str) -> User:
     """Make a new user"""
+    if len(password) <= 0:
+        raise ValueError("Password can't be empty")
+
+    if len(name) <= 0:
+        raise ValueError("Password can't be empty")
+
     user: User = User(name=name, password=password, groups=[])
     database.add(user)
     await database.commit()
