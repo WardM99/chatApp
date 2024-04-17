@@ -26,6 +26,12 @@ async def test_make_group(database_session: AsyncSession):
     assert new_group.private is False
 
 
+async def test_make_group_empty_name(database_session: AsyncSession):
+    owner: User = await make_user(database_session, "Owner", "pw1")
+    with pytest.raises(ValueError):
+        await make_group(database_session, owner, "")
+
+
 async def test_make_group_private(database_session: AsyncSession):
     owner: User = await make_user(database_session, "Owner", "pw1")
     new_group: Group = await make_group(database_session, owner, "Group1", private=True)
@@ -66,6 +72,12 @@ async def test_edit_group_name(database_session: AsyncSession):
     group: Group = await edit_group_name(database_session, new_group, "Group1")
     assert group.name == "Group1"
 
+
+async def test_edit_group_name_empty_name(database_session: AsyncSession):
+    owner: User = await make_user(database_session, "Owner", "pw1")
+    new_group: Group = await make_group(database_session, owner, "Soup1")
+    with pytest.raises(ValueError):
+        await edit_group_name(database_session, new_group, "")
 
 async def test_tranfer_owner(database_session: AsyncSession):
     old_owner: User = await make_user(database_session, "Old", "pw1")
