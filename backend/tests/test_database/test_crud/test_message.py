@@ -24,6 +24,12 @@ async def test_make_message(database_session: AsyncSession):
     assert new_message.sender_id == user.user_id
     assert new_message.reply_id is None
 
+async def test_make_message_empty_message(database_session: AsyncSession):
+    user: User = await make_user(database_session, "Owner", "pw1")
+    group: Group = await make_group(database_session, user, "Group1")
+    with pytest.raises(ValueError):
+        await make_message(database_session, user, group, "")
+
 
 async def test_make_reply(database_session: AsyncSession):
     user: User = await make_user(database_session, "Owner", "pw1")
@@ -125,6 +131,14 @@ async def test_edit_message(database_session: AsyncSession):
     new_message: Message = await make_message(database_session, user, group, "First")
     updated_message: Message = await edit_message(database_session, new_message, "First!")
     assert updated_message.message == "First!"
+
+
+async def test_edit_message_empty_message(database_session: AsyncSession):
+    user: User = await make_user(database_session, "Owner", "pw1")
+    group: Group = await make_group(database_session, user, "Group1")
+    new_message: Message = await make_message(database_session, user, group, "First")
+    with pytest.raises(ValueError):
+        await edit_message(database_session, new_message, "")
 
 
 async def test_delete_message(database_session: AsyncSession):
