@@ -73,21 +73,21 @@ async def logic_add_user_by_name(
         database: AsyncSession,
         user: User, group: Group,
         new_user_name: str
-) -> None:
+) -> Group:
     """Logic to add a user by name to a group"""
     if group.owner_id != user.user_id:
         raise WrongUserException
     new_user: User = await get_user_by_name(database, new_user_name)
-    await add_user(database, group, new_user)
+    return await add_user(database, group, new_user)
 
 
-async def logic_add_user(database: AsyncSession, user: User, group: Group) -> None:
+async def logic_add_user(database: AsyncSession, user: User, group: Group) -> Group:
     """Logic to add a user to a group"""
     if group.private and group.owner_id != user.user_id:
         raise WrongUserException
     if user in group.users:
         raise AlreadyInGroupException
-    await add_user(database, group, user)
+    return await add_user(database, group, user)
 
 
 async def logic_remove_user(

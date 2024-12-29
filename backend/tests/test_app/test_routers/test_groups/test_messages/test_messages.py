@@ -111,7 +111,7 @@ async def test_get_messages_in_group_by_name(database_session: AsyncSession, aut
     post_request = await auth_client.post(f"/groups/{group.group_id}/messages", json={"message": "How are yall", "reply_id": None})
     assert post_request.status_code == status.HTTP_201_CREATED
     auth_client.login(user2)
-    await auth_client.put(f"/groups/{group.group_id}/user")
+    await auth_client.post(f"/groups/{group.group_id}/user")
     post_request = await auth_client.post(f"/groups/{group.group_id}/messages", json={"message": "Hi", "reply_id": None})
     assert post_request.status_code == status.HTTP_201_CREATED
     get_request = await auth_client.get(f"/groups/{group.group_id}/messages/{user.name}")
@@ -134,7 +134,7 @@ async def test_get_messages_in_group_by_name_not_logged_in(database_session: Asy
     post_request = await auth_client.post(f"/groups/{group.group_id}/messages", json={"message": "How are yall", "reply_id": None})
     assert post_request.status_code == status.HTTP_201_CREATED
     auth_client.login(user2)
-    await auth_client.put(f"/groups/{group.group_id}/user")
+    await auth_client.post(f"/groups/{group.group_id}/user")
     post_request = await auth_client.post(f"/groups/{group.group_id}/messages", json={"message": "Hi", "reply_id": None})
     assert post_request.status_code == status.HTTP_201_CREATED
     auth_client.invalid()
@@ -170,7 +170,7 @@ async def test_change_message_wrong_user(database_session: AsyncSession, auth_cl
     message_id = data["message_id"]
     user2: User = await make_user(database_session, "User2", "pw1")
     auth_client.login(user2)
-    await auth_client.put(f"/groups/{group.group_id}/user")
+    await auth_client.post(f"/groups/{group.group_id}/user")
     put_request = await auth_client.put(f"/groups/{group.group_id}/messages/{message_id}", json={"message": "Hi!", "reply_id": None})
     assert put_request.status_code == status.HTTP_401_UNAUTHORIZED
     get_request = await auth_client.get(f"/groups/{group.group_id}/messages")
@@ -223,7 +223,7 @@ async def test_delete_message_wrong_user(database_session: AsyncSession, auth_cl
     message_id = data["message_id"]
     user2: User = await make_user(database_session, "User2", "pw1")
     auth_client.login(user2)
-    await auth_client.put(f"/groups/{group.group_id}/user")
+    await auth_client.post(f"/groups/{group.group_id}/user")
     delete_request = await auth_client.delete(f"/groups/{group.group_id}/messages/{message_id}")
     assert delete_request.status_code == status.HTTP_401_UNAUTHORIZED
     get_request = await auth_client.get(f"/groups/{group.group_id}/messages")
