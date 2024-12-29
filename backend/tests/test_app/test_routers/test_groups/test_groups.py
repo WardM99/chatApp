@@ -371,8 +371,8 @@ async def test_add_user_to_group_by_name(database_session: AsyncSession, auth_cl
     data_post = post_request.json()
     group_id = data_post["group_id"]
     user2: User = await make_user(database_session, "User2", "pw1")
-    put_request = await auth_client.put(f"/groups/{group_id}/username", json={"user_name": user2.name})
-    assert put_request.status_code == status.HTTP_204_NO_CONTENT
+    put_request = await auth_client.post(f"/groups/{group_id}/username", json={"user_name": user2.name})
+    assert put_request.status_code == status.HTTP_201_CREATED
     get_request = await auth_client.get(f"/groups/{group_id}")
     data_get = get_request.json()
     assert len(data_get["users"]) == 2
@@ -386,7 +386,7 @@ async def test_add_user_to_group_by_name_not_logged_in(database_session: AsyncSe
     data_post = post_request.json()
     group_id = data_post["group_id"]
     user2: User = await make_user(database_session, "User2", "pw1")
-    put_request = await test_client.put(f"/groups/{group_id}/username", json={"user_name": user2.name})
+    put_request = await test_client.post(f"/groups/{group_id}/username", json={"user_name": user2.name})
     assert put_request.status_code == status.HTTP_401_UNAUTHORIZED
     get_request = await auth_client.get(f"/groups/{group_id}")
     data_get = get_request.json()
@@ -403,7 +403,7 @@ async def test_add_user_to_group_by_name_not_owner(database_session: AsyncSessio
     group_id = data_post["group_id"]
     user2: User = await make_user(database_session, "User2", "pw1")
     auth_client.login(user2)
-    put_request = await auth_client.put(f"/groups/{group_id}/username", json={"user_name": user2.name})
+    put_request = await auth_client.post(f"/groups/{group_id}/username", json={"user_name": user2.name})
     assert put_request.status_code == status.HTTP_401_UNAUTHORIZED
     get_request = await auth_client.get(f"/groups/{group_id}")
     data_get = get_request.json()
@@ -424,8 +424,8 @@ async def test_add_user_to_private_group(database_session: AsyncSession, auth_cl
     data_get = get_request.json()
     assert len(data_get["users"]) == 1
     auth_client.login(user)
-    put_request = await auth_client.put(f"/groups/{group_id}/username", json={"user_name": user2.name})
-    assert put_request.status_code == status.HTTP_204_NO_CONTENT
+    put_request = await auth_client.post(f"/groups/{group_id}/username", json={"user_name": user2.name})
+    assert put_request.status_code == status.HTTP_201_CREATED
     get_request = await auth_client.get(f"/groups/{group_id}")
     data_get = get_request.json()
     assert len(data_get["users"]) == 2

@@ -151,9 +151,10 @@ async def remove_user(
     await logic_remove_user(database, user, group, user.user_id)
 
 
-@group_router.put(
+@group_router.post(
     "/{group_id}/username",
-    status_code=status.HTTP_204_NO_CONTENT,
+    status_code=status.HTTP_201_CREATED,
+    response_model=ReturnGroup,
     dependencies=[Depends(live)]
 )
 async def add_user_by_name(
@@ -163,7 +164,7 @@ async def add_user_by_name(
     group: Group = Depends(logic_get_group_by_id)
 ):
     """add a user to a group by name"""
-    await logic_add_user_by_name(database, user, group, new_user.user_name)
+    return await logic_add_user_by_name(database, user, group, new_user.user_name)
 
 
 @group_router.websocket(
