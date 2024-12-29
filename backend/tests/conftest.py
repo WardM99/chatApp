@@ -5,7 +5,7 @@ import pytest
 
 from sqlmodel import SQLModel
 from sqlmodel.ext.asyncio.session import AsyncSession
-from httpx import AsyncClient
+from httpx import AsyncClient, ASGITransport
 from src.database.database import engine
 
 from src.app.app import app
@@ -66,7 +66,7 @@ def test_client(database_session: AsyncSession, aiohttp_session: AsyncMock) -> A
     # Replace get_session with a call to this method instead
     app.dependency_overrides[get_session] = override_get_session
     app.dependency_overrides[get_http_session] = override_get_http_session
-    return AsyncClient(app=app, base_url="http://test")
+    return AsyncClient(transport=ASGITransport(app=app), base_url="http://test")
 
 
 @pytest.fixture
@@ -86,4 +86,4 @@ def auth_client(database_session: AsyncSession, aiohttp_session: AsyncMock) -> A
     # Replace get_session with a call to this method instead
     app.dependency_overrides[get_session] = override_get_session
     app.dependency_overrides[get_http_session] = override_get_http_session
-    return AuthClient(database_session, app=app, base_url="http://test")
+    return AuthClient(database_session, transport=ASGITransport(app=app), base_url="http://test")
