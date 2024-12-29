@@ -107,9 +107,10 @@ async def delete_group(
     await logic_delete_group(database, user, group)
 
 
-@group_router.put(
+@group_router.post(
     "/{group_id}/user",
-    status_code=status.HTTP_204_NO_CONTENT,
+    status_code=status.HTTP_201_CREATED,
+    response_model=ReturnGroup,
     dependencies=[Depends(live)]
 )
 async def add_user(
@@ -118,7 +119,7 @@ async def add_user(
     group: Group = Depends(logic_get_group_by_id)
 ):
     """add user to a group"""
-    await logic_add_user(database, user, group)
+    return await logic_add_user(database, user, group)
 
 
 @group_router.patch(
