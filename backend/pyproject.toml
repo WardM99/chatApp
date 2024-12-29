@@ -29,7 +29,7 @@ pyhumps = "^3.8.0"
 pytest = "^8.0.0"
 pylint = "^3.0.2"
 mypy = "^1.7"
-pytest-asyncio = "^0.23.2"
+pytest-asyncio = "^0.25.0"
 coverage = "^7.3.3"
 
 [tool.pylint.main]
