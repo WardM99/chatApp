@@ -6,7 +6,7 @@ from sqlmodel import SQLModel
 class GroupCreate(SQLModel):
     """Schema to create a group"""
     name: str
-    private: bool = False
+    is_private: bool = False
 
 
 class ReturnUserBasic(SQLModel):
@@ -20,7 +20,7 @@ class ReturnGroupBasic(SQLModel):
     """Basic schema to return a group"""
     group_id: Optional[int]
     name: str
-    private: bool
+    is_private: bool
 
 
 class ReturnGroup(ReturnGroupBasic):

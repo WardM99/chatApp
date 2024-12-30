@@ -24,10 +24,10 @@ async def logic_make_new_group(
     database: AsyncSession,
     owner: User,
     name: str,
-    private: bool = False
+    is_private: bool = False
 ) -> Group:
     """Logic to make a new group"""
-    return await make_group(database, owner, name, private=private)
+    return await make_group(database, owner, name, is_private=is_private)
 
 
 async def logic_get_group_by_id(
@@ -83,7 +83,7 @@ async def logic_add_user_by_name(
 
 async def logic_add_user(database: AsyncSession, user: User, group: Group) -> Group:
     """Logic to add a user to a group"""
-    if group.private and group.owner_id != user.user_id:
+    if group.is_private and group.owner_id != user.user_id:
         raise WrongUserException
     if user in group.users:
         raise AlreadyInGroupException

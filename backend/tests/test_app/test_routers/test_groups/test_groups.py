@@ -17,7 +17,7 @@ async def test_make_group(database_session: AsyncSession, auth_client: AuthClien
     assert "group_id" in data
     assert data["name"] == "Cool Group"
     assert data["owner_id"] == user.user_id
-    assert data["private"] is False
+    assert data["is_private"] is False
     assert len(data["users"]) == 1
     assert data["users"][0]["name"] == "User1"
     assert data["users"][0]["user_id"] == user.user_id
@@ -27,13 +27,13 @@ async def test_make_group(database_session: AsyncSession, auth_client: AuthClien
 async def test_make_group_public(database_session: AsyncSession, auth_client: AuthClient):
     user: User = await make_user(database_session, "User1", "pw1")
     auth_client.login(user)
-    post_request = await auth_client.post("/groups", json={"name": "Cool Group", "private": "False"})
+    post_request = await auth_client.post("/groups", json={"name": "Cool Group", "is_private": "False"})
     assert post_request.status_code == status.HTTP_201_CREATED
     data = post_request.json()
     assert "group_id" in data
     assert data["name"] == "Cool Group"
     assert data["owner_id"] == user.user_id
-    assert data["private"] is False
+    assert data["is_private"] is False
     assert len(data["users"]) == 1
     assert data["users"][0]["name"] == "User1"
     assert data["users"][0]["user_id"] == user.user_id
@@ -43,13 +43,13 @@ async def test_make_group_public(database_session: AsyncSession, auth_client: Au
 async def test_make_group_private(database_session: AsyncSession, auth_client: AuthClient):
     user: User = await make_user(database_session, "User1", "pw1")
     auth_client.login(user)
-    post_request = await auth_client.post("/groups", json={"name": "Cool Group", "private": "True"})
+    post_request = await auth_client.post("/groups", json={"name": "Cool Group", "is_private": "True"})
     assert post_request.status_code == status.HTTP_201_CREATED
     data = post_request.json()
     assert "group_id" in data
     assert data["name"] == "Cool Group"
     assert data["owner_id"] == user.user_id
-    assert data["private"]
+    assert data["is_private"]
     assert len(data["users"]) == 1
     assert data["users"][0]["name"] == "User1"
     assert data["users"][0]["user_id"] == user.user_id
@@ -412,7 +412,7 @@ async def test_add_user_to_group_by_name_not_owner(database_session: AsyncSessio
 async def test_add_user_to_private_group(database_session: AsyncSession, auth_client: AuthClient):
     user: User = await make_user(database_session, "User1", "pw1")
     auth_client.login(user)
-    post_request = await auth_client.post("/groups", json={"name": "Cool Group", "private": "True"})
+    post_request = await auth_client.post("/groups", json={"name": "Cool Group", "is_private": "True"})
     assert post_request.status_code == status.HTTP_201_CREATED
     data_post = post_request.json()
     group_id = data_post["group_id"]
