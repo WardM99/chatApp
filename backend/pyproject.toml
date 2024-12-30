@@ -24,6 +24,7 @@ httpx = "^0.28.1"
 requests = "^2.31.0"
 websockets = "^14.1"
 pyhumps = "^3.8.0"
+fastapi-camelcase = "^2.0.0"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.0.0"
@@ -34,6 +35,9 @@ coverage = "^7.3.3"
 
 [tool.pylint.main]
 min-public-methods=1
+
+[tool.pylint.format]
+max-line-length = 120
 
 [build-system]
 requires = ["poetry-core"]

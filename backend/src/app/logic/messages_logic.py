@@ -5,6 +5,7 @@ from sqlmodel.ext.asyncio.session import AsyncSession
 from src.app.exceptions.wronguser import WrongUserException
 from src.app.logic.groups_logic import logic_get_group_by_id
 from src.app.logic.users_logic import logic_get_user_by_name
+from src.app.logic.object_to_return_object import message_to_return_message
 from src.app.schemas.message import ReturnMessage, ReturnMessages
 from src.database.crud.message import (
     get_messages_by_group,
@@ -24,23 +25,6 @@ async def logic_get_message_by_id(
 ) -> Message:
     """Logic to get the message by id"""
     return await get_message_by_id(database, message_id)
-
-
-async def message_to_return_message(message: Message, database: AsyncSession) -> ReturnMessage:
-    """Helper function to change a Message to a ReturnMessage"""
-    reply_message: Optional[Message] = None
-    if message.reply_id:
-        reply_message = await get_message_by_id(database, message.reply_id)
-    return ReturnMessage(
-        message_id=message.message_id,
-        message=message.message,
-        sender_id=message.sender_id,
-        sender=message.sender,
-        group_id=message.group_id,
-        group=message.group,
-        reply_id=message.reply_id,
-        reply=reply_message
-    )
 
 
 async def logic_make_message(

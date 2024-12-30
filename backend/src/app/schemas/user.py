@@ -1,11 +1,12 @@
 """Schemas of users"""
 from typing import Optional, List
 
+from fastapi_camelcase import CamelModel
 from sqlmodel import SQLModel
 from src.app.schemas.group import ReturnGroupBasic, ReturnUserBasic
 
 
-class UserCreate(SQLModel):
+class UserCreate(CamelModel):
     """Schema to create a user"""
     name: str
     password: str
@@ -23,27 +24,27 @@ class Token(SQLModel):
     user: ReturnUser
 
 
-class ReturnUsers(SQLModel):
+class ReturnUsers(CamelModel):
     """Represents multiple users"""
     users: List[ReturnUser]
 
 
-class ChangePassword(SQLModel):
+class ChangePassword(CamelModel):
     """Schema to change password"""
     password: str
 
 
-class ChangeName(SQLModel):
+class ChangeName(CamelModel):
     """Schema to change name"""
     name: str
 
 
-class ChangeUser(SQLModel):
+class ChangeUser(CamelModel):
     """Schema to change user"""
     name: Optional[str]
     password: Optional[str]
 
 
-class ChangeStatus(SQLModel):
+class ChangeStatus(CamelModel):
     """Schema to change status"""
     status: Optional[str]

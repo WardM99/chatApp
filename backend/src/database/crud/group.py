@@ -17,12 +17,12 @@ async def make_group(
     database: AsyncSession,
     owner: User,
     name: str,
-    private: bool = False
+    is_private: bool = False
 ) -> Group:
     """Make a group"""
     if len(name) <= 0:
         raise ValueError("Group name can't be empty")
-    group: Group = Group(name=name, owner_id=owner.user_id, private=private)
+    group: Group = Group(name=name, owner_id=owner.user_id, is_private=is_private)
     group.users.append(owner)
     database.add(group)
     await database.commit()

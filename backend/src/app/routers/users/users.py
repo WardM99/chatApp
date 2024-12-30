@@ -36,6 +36,7 @@ user_router = APIRouter(prefix="/users")
 @user_router.post("", status_code=status.HTTP_201_CREATED, response_model=Token)
 async def route_new_user(new_user: UserCreate, database: AsyncSession = Depends(get_session)):
     """make a new user"""
+    print(new_user)
     return await logic_generate_token(
         await logic_make_new_user(database, new_user.name, new_user.password)
     )
@@ -45,13 +46,15 @@ async def route_new_user(new_user: UserCreate, database: AsyncSession = Depends(
 async def login(form_data: OAuth2PasswordRequestForm = Depends(),
                 database: AsyncSession = Depends(get_session)):
     """Login a user"""
-    return await logic_generate_token(
+    login_ = await logic_generate_token(
         await logic_get_user_by_name_and_password(
             database,
             form_data.username,
             form_data.password
         )
     )
+    print(login_)
+    return login_
 
 @user_router.get("", response_model=ReturnUser, status_code=status.HTTP_200_OK)
 async def get_current_user(user: User = Depends(require_user)):

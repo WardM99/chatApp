@@ -1,15 +1,16 @@
 """Schemas for messages"""
 from typing import Optional, List
-from sqlmodel import SQLModel
+
+from fastapi_camelcase import CamelModel
 from src.app.schemas.group import ReturnUserBasic, ReturnGroupBasic
 
-class WriteMessage(SQLModel):
+class WriteMessage(CamelModel):
     """Schema to write a message"""
     message: str
     reply_id: Optional[int] = None
 
 
-class ReturnMessageBasic(SQLModel):
+class ReturnMessageBasic(CamelModel):
     """Basic schema to return a message"""
     message_id: Optional[int]
     message: str
@@ -25,6 +26,6 @@ class ReturnMessage(ReturnMessageBasic):
     reply: Optional[ReturnMessageBasic] = None
 
 
-class ReturnMessages(SQLModel):
+class ReturnMessages(CamelModel):
     """Schema to return multiple messages"""
     messages: List[ReturnMessage]
