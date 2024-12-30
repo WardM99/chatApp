@@ -36,6 +36,9 @@ coverage = "^7.3.3"
 [tool.pylint.main]
 min-public-methods=1
 
+[tool.pylint.format]
+max-line-length = 120
+
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
