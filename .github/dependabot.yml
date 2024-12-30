@@ -21,3 +21,10 @@ updates:
       interval: "daily"
     commit-message:
       prefix: ":arrow_up:"
+package-ecosystem: maven
+    directory: "/tests"
+    open-pull-requests-limit: 100
+    schedule:
+      interval: "daily"
+    commit-message:
+      prefix: ":arrow_up:"
