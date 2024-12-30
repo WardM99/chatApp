@@ -1,6 +1,7 @@
 package chatapp.api.user;
 
 import chatapp.api.BaseApi;
+import chatapp.dto.Login;
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
 
@@ -19,11 +20,8 @@ class UserLogin extends BaseApi {
                 .response();
 
     }
-/*
-PreemptiveBasicAuthScheme authScheme = new PreemptiveBasicAuthScheme();
-authScheme.setUserName("login");
-authScheme.setPassword("password");
-RestAssured.authentication = authScheme;
- */
-    //.("grant_type=password&username=test.user&password=test123&scope=&client_id=string&client_secret=string")
+
+    protected static Login getLoginFromResponse(Response response) {
+        return response.getBody().as(Login.class);
+    }
 }

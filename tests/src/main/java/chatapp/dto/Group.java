@@ -1,8 +1,7 @@
 package chatapp.dto;
 
 public class Group {
-    public int group_id;
+    public int groupId;
     public String name;
-    @JsonProperty("private")
-    public boolean privateGroup;
+    public boolean isPrivate;
 }
