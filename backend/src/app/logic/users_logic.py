@@ -10,7 +10,8 @@ from sqlmodel.ext.asyncio.session import AsyncSession
 from sqlalchemy.exc import NoResultFound
 from src.app.exceptions.wrongcredentials import WrongCredentialsException
 from src.app.exceptions.wronguser import WrongUserException
-from src.app.schemas.user import Token, ReturnUser, ReturnUserBasic
+from src.app.schemas.user import Token, ReturnUser
+from src.app.logic.object_to_return_object import user_to_return_user
 from src.database.database import get_session
 from src.database.crud.user import (
     make_user,
@@ -116,23 +117,6 @@ async def logic_change_user(database: AsyncSession,
         await edit_user_name(database, user, new_name)
     if new_password:
         await edit_user_password(database, user, new_password)
-
-async def user_to_return_user_basic(user: User) -> ReturnUserBasic:
-    """logic to make a ReturnUser from a User"""
-    return ReturnUserBasic(
-        user_id=user.user_id,
-        name=user.name,
-        status=user.status
-    )
-
-async def user_to_return_user(user: User) -> ReturnUser:
-    """logic to make a ReturnUser from a User"""
-    return ReturnUser(
-        user_id=user.user_id,
-        name=user.name,
-        status=user.status,
-        groups=user.groups
-    )
 
 async def logic_generate_token(user: User) -> Token:
     """The logic to create a token"""
