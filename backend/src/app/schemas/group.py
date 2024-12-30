@@ -1,22 +1,22 @@
 """Schemas for groups"""
 from typing import Optional, List
 
-from sqlmodel import SQLModel
+from fastapi_camelcase import CamelModel
 
-class GroupCreate(SQLModel):
+class GroupCreate(CamelModel):
     """Schema to create a group"""
     name: str
     is_private: bool = False
 
 
-class ReturnUserBasic(SQLModel):
+class ReturnUserBasic(CamelModel):
     """Basic schema to return a user"""
     user_id: Optional[int]
     name: str
     status: Optional[str]
 
 
-class ReturnGroupBasic(SQLModel):
+class ReturnGroupBasic(CamelModel):
     """Basic schema to return a group"""
     group_id: Optional[int]
     name: str
@@ -30,21 +30,21 @@ class ReturnGroup(ReturnGroupBasic):
     owner: ReturnUserBasic
 
 
-class ChangeGroup(SQLModel):
+class ChangeGroup(CamelModel):
     """Schema to change the groups name"""
     name: str
 
 
-class NewOwner(SQLModel):
+class NewOwner(CamelModel):
     """Schema to transfer ownership"""
     user_id: Optional[int]
 
 
-class RemoveUser(SQLModel):
+class RemoveUser(CamelModel):
     """Schema to remove a user to the group"""
     user_id: Optional[int]
 
 
-class AddUserName(SQLModel):
+class AddUserName(CamelModel):
     """Schema to add a user by name"""
     user_name: str

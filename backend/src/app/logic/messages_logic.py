@@ -3,9 +3,10 @@ from typing import List, Optional
 from fastapi import Depends
 from sqlmodel.ext.asyncio.session import AsyncSession
 from src.app.exceptions.wronguser import WrongUserException
-from src.app.logic.groups_logic import logic_get_group_by_id
-from src.app.logic.users_logic import logic_get_user_by_name
-from src.app.schemas.message import ReturnMessage, ReturnMessages
+from src.app.logic.groups_logic import logic_get_group_by_id, group_to_return_group_basic
+from src.app.logic.users_logic import logic_get_user_by_name, user_to_return_user_basic
+from src.app.schemas.message import ReturnMessage, ReturnMessages, ReturnMessageBasic
+from src.app.schemas.group import ReturnGroupBasic, ReturnUserBasic
 from src.database.crud.message import (
     get_messages_by_group,
     get_messages_by_user_in_group,
@@ -28,20 +29,35 @@ async def logic_get_message_by_id(
 
 async def message_to_return_message(message: Message, database: AsyncSession) -> ReturnMessage:
     """Helper function to change a Message to a ReturnMessage"""
-    reply_message: Optional[Message] = None
+    return_reply_message_basic: Optional[Message] = None
     if message.reply_id:
-        reply_message = await get_message_by_id(database, message.reply_id)
+        reply_message: Message = await get_message_by_id(database, message.reply_id)
+        return_reply_message_basic: ReturnMessageBasic = await message_to_return_message_basic(reply_message)
+
+    return_user_basic_sender: ReturnUserBasic = await user_to_return_user_basic(message.sender)
+    return_group_basic: ReturnGroupBasic = await group_to_return_group_basic(message.group)
+
     return ReturnMessage(
         message_id=message.message_id,
         message=message.message,
         sender_id=message.sender_id,
-        sender=message.sender,
+        sender=return_user_basic_sender,
         group_id=message.group_id,
-        group=message.group,
+        group=return_group_basic,
         reply_id=message.reply_id,
-        reply=reply_message
+        reply=return_reply_message_basic
     )
 
+
+async def message_to_return_message_basic(message: Message) -> ReturnMessageBasic:
+    """Helper function to change a Message to a ReturnMessageBasic"""
+    return_user_basic_sender: ReturnUserBasic = await user_to_return_user_basic(message.sender)
+    return ReturnMessageBasic(
+        message_id=message.message_id,
+        message=message.message,
+        sender_id=message.sender_id,
+        sender=return_user_basic_sender
+    )
 
 async def logic_make_message(
         database: AsyncSession,

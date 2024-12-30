@@ -7,6 +7,7 @@ from src.app.exceptions.alreadyingroup import AlreadyInGroupException
 from src.app.exceptions.notingroup import NotInGroupException
 from src.app.exceptions.wronguser import WrongUserException
 from src.app.logic.users_logic import logic_get_user_by_id, require_user
+from src.app.schemas.group import ReturnGroupBasic
 from src.database.crud.group import (
     get_group_by_id,
     make_group,
@@ -19,6 +20,14 @@ from src.database.crud.group import (
 from src.database.crud.user import get_user_by_name
 from src.database.database import get_session
 from src.database.models import User, Group
+
+async def group_to_return_group_basic(group: Group) -> ReturnGroupBasic:
+    """Logic to go from Group to ReturnGroupBaisc"""
+    return ReturnGroupBasic(
+        group_id=group.group_id,
+        name=group.name,
+        is_private=group.is_private
+    )
 
 async def logic_make_new_group(
     database: AsyncSession,

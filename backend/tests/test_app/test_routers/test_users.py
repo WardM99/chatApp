@@ -14,7 +14,7 @@ async def test_make_user(test_client: AsyncClient):
     assert new_user_json["access_token"]
     assert new_user_json["token_type"] == "bearer"
     assert new_user_json["user"]["name"] == "Joske"
-    assert new_user_json["user"]["user_id"]
+    assert new_user_json["user"]["userId"]
     assert new_user_json["user"]["status"] is None
     assert len(new_user_json["user"]["groups"]) == 0
 
@@ -63,19 +63,19 @@ async def test_get_user_not_logged_in(test_client: AsyncClient):
 async def test_get_user(database_session: AsyncSession, auth_client: AuthClient):
     user: User = await make_user(database_session, "Joske", "PW1")
     data = await auth_client.post("/users", json={"name": "New User", "password": "pw1"})
-    user_id = data.json()["user"]["user_id"]
+    user_id = data.json()["user"]["userId"]
     auth_client.login(user)
     get_request = await auth_client.get(f"/users/{user_id}")
     data = get_request.json()
     assert get_request.status_code == status.HTTP_200_OK
-    assert data["user_id"] == user_id
+    assert data["userId"] == user_id
     assert data["name"] == "New User"
     assert "password" not in data
 
     get_request = await auth_client.get(f"/users/{user.user_id}")
     data = get_request.json()
     assert get_request.status_code == status.HTTP_200_OK
-    assert data["user_id"] == user.user_id
+    assert data["userId"] == user.user_id
     assert data["name"] == "Joske"
     assert "password" not in data
 

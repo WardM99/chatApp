@@ -10,7 +10,7 @@ from sqlmodel.ext.asyncio.session import AsyncSession
 from sqlalchemy.exc import NoResultFound
 from src.app.exceptions.wrongcredentials import WrongCredentialsException
 from src.app.exceptions.wronguser import WrongUserException
-from src.app.schemas.user import Token
+from src.app.schemas.user import Token, ReturnUser, ReturnUserBasic
 from src.database.database import get_session
 from src.database.crud.user import (
     make_user,
@@ -29,7 +29,9 @@ pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 async def logic_make_new_user(database: AsyncSession, name: str, password: str) -> User:
     """logic to make a new user"""
+    print(f"name: {name}")
     user: User = await make_user(database, name, pwd_context.hash(password))
+    print(f"user: {user}")
     return user
 
 
@@ -115,14 +117,31 @@ async def logic_change_user(database: AsyncSession,
     if new_password:
         await edit_user_password(database, user, new_password)
 
+async def user_to_return_user_basic(user: User) -> ReturnUserBasic:
+    """logic to make a ReturnUser from a User"""
+    return ReturnUserBasic(
+        user_id=user.user_id,
+        name=user.name,
+        status=user.status
+    )
+
+async def user_to_return_user(user: User) -> ReturnUser:
+    """logic to make a ReturnUser from a User"""
+    return ReturnUser(
+        user_id=user.user_id,
+        name=user.name,
+        status=user.status,
+        groups=user.groups
+    )
 
 async def logic_generate_token(user: User) -> Token:
     """The logic to create a token"""
     access_token = create_token(user)
+    return_user: ReturnUser = await user_to_return_user(user)
     return Token(
         access_token=access_token,
         token_type="bearer",
-        user=user
+        user=return_user
     )
 
 
@@ -145,14 +164,15 @@ async def get_user_from_access_token(
     token: str = Depends(oauth2_scheme)
 ) -> User:
     """Get the user from an access token"""
+    print(f"token: {token}")
     payload = jwt.decode(
         token,
         "WPll6MnvmR1NLf7x6jszNNXlQUwhqpKIyIUyQdg3zio7ngodp82FRbh1JM4UO5qZ",
         algorithms="HS256"
     )
+    print(f"payload: {payload}")
     user_id: int | None = payload.get("sub")
     type_in_token: int | None = payload.get("type")
-
     if user_id is None or type_in_token is None:
         raise JWTError()
 
