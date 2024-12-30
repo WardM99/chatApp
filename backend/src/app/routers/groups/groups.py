@@ -50,7 +50,12 @@ async def make_group(
     user: User = Depends(require_user)
 ):
     """make a new group"""
-    return await logic_make_new_group(database, user, new_group.name, is_private=new_group.is_private)
+    return await logic_make_new_group(
+        database,
+        user,
+        new_group.name,
+        is_private=new_group.is_private
+    )
 
 
 @group_router.get(
