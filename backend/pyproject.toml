@@ -22,7 +22,7 @@ types-python-jose = "^3.3.4.8"
 aiohttp = "^3.9.1"
 httpx = "^0.28.1"
 requests = "^2.31.0"
-websockets = "^14.1"
+websockets = "^15.0"
 pyhumps = "^3.8.0"
 fastapi-camelcase = "^2.0.0"
 
